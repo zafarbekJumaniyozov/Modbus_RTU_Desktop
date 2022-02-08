@@ -95,11 +95,18 @@ def on1():
     client1.write_register(2, 0x0200)
     client1.write_register(1, 0x0100)
 
+    sensor1a=str(client2.read_register(1,0,3))
+
+    sensor1=float(int(sensor1a[0:len(sensor1a)-1])/100)
+
 
 
 def on2():
     client1.write_register(1, 0x0200)
     client1.write_register(2, 0x0100)
+    sensor1a=str(client2.read_register(1,0,3))
+
+    sensor1= float(int(sensor1a[0:len(sensor1a)-1])/100)
 
 
 def on3():
@@ -180,9 +187,10 @@ def off6():
 
 def water_sensor():
     #sensoor1
+    #past_suv=int(3200)
     sensor1a=str(client2.read_register(1,0,3))
-
-    sensor1=float(int(sensor1a[0:len(sensor1a)-1])/100)
+    pastki_sath1 = 2.35#bazadan sathni olish kerak vazifa
+    sensor1=pastki_sath1-float(int(sensor1a[0:len(sensor1a)-1])/100)
 
     b = datetime.datetime.now()
 
@@ -190,16 +198,16 @@ def water_sensor():
 
     #Sensor2
     sensor2a=str(client2.read_register(1,0,3))
-
-    sensor2=float(int(sensor2a[0:len(sensor2a)-1])/100)
+    pastki_sath2 = 2.31
+    sensor2=pastki_sath2-float(int(sensor2a[0:len(sensor2a)-1])/100)
 
     b = datetime.datetime.now()
 
     labelsensor2.configure(text=sensor2 )
     #sensor3
     sensor3a=str(client4.read_register(1,0,3))
-
-    sensor3=float(int(sensor3a[0:len(sensor3a)-1])/100)
+    pastki_sath3 = 2.25
+    sensor3=pastki_sath3-float(int(sensor3a[0:len(sensor3a)-1])/100)
 
     b = datetime.datetime.now()
 
@@ -230,6 +238,27 @@ def water_sensor():
     b = datetime.datetime.now()
 
     labelOut2.configure(text=sensor7 )
+    #Bazaga yozish
+#1-motorning sensorindagi malumoti yozish
+    sensorSql1 = "INSERT INTO motor_sensor(asos_id,motor_id,user_id,cm)VALUES (%s,%s,%s,%s)"
+    valSensor1 = ("1", "1", "1", sensor1)
+    mycursor.execute(sensorSql1, valSensor1)
+    mydb.commit()
+
+    # 2-motorning sensorindagi malumoti yozish
+    sensorSql2 = "INSERT INTO motor_sensor(asos_id,motor_id,user_id,cm)VALUES (%s,%s,%s,%s)"
+    valSensor2 = ("1", "2", "1", sensor2)
+    mycursor.execute(sensorSql2, valSensor2)
+    mydb.commit()
+
+    # 3-motorning sensorindagi malumoti yozish
+    sensorSql3 = "INSERT INTO motor_sensor(asos_id,motor_id,user_id,cm)VALUES (%s,%s,%s,%s)"
+    valSensor3 = ("1", "3", "1", sensor3)
+    mycursor.execute(sensorSql3, valSensor3)
+    mydb.commit()
+
+
+
     sensorSql5="INSERT INTO water_sensor(asos_id,sensor_id,user_id,cm)VALUES (%s,%s,%s,%s)"
     valSensor5=("1","5","1",sensor5)
     mycursor.execute(sensorSql5,valSensor5)
@@ -244,33 +273,39 @@ def water_sensor():
     valSensor7=("1","7","1",sensor7)
     mycursor.execute(sensorSql7,valSensor7)
     mydb.commit()
-
-    labelOut1.after(1000, water_sensor)
-    labelIN.after(1000, water_sensor)
-    labelOut2.after(1000,water_sensor)
+    labelsensor1.after(5000,water_sensor())
+    labelsensor2.after(5000,water_sensor())
+    labelsensor3.after(5000,water_sensor())
+    labelOut1.after(10000, water_sensor)
+    labelIN.after(10000, water_sensor)
+    labelOut2.after(10000,water_sensor)
 
 
 
 window=Tk()
-window.title('Polvon ')
+window.title('Polvon kanal')
 window.geometry('1200x700')
 window.configure(bg="#0099cc")
-window.iconbitmap(r'water_J79_icon.ico')
 
 label=Label(text='Control Motor',fg='orange',bg='blue',width=20,font=('italic',25,'bold')).grid(row=1,column=3,padx=25,pady=6)
 
 label1=Button(text='1',fg='yellow',bg='blue',width=2,font=('italic',20,'bold')).grid(row=3,column=1,padx=3,pady=6)
 
-labelsensor1=Label(font=('Arial',20),bg='white',fg='blue',width=15,bd=2,
+labelsensor1=Label(font=('Arial',20),bg='white',fg='blue',width=5,bd=2,
             relief=SUNKEN).grid(row=3,column=2)
+
+sath1=Entry(font=('Arial',20),bg='white',fg='blue',width=5,bd=2,
+            relief=SUNKEN).grid(row=3,column=3)
 button11=Button(window,width=5,command=on1,text='tepaga',fg='white',bg='green',font=('italic',14,'bold')).grid(row=3,column=4,padx=3,pady=6)
 button12=Button(window,width=5,command=off1,text='stop',fg='white',bg='red',font=('italic',14,'bold')).grid(row=3,column=5,padx=3,pady=6)
 button13=Button(window,width=5,command=on2,text='pastga',fg='black',bg='yellow',font=('italic',14,'bold')).grid(row=3,column=6,padx=3,pady=6)
 
 
 label2=Button(text='2',fg='yellow',bg='blue',width=2,font=('italic',20,'bold')).grid(row=4,column=1,padx=3,pady=6)
-labelsensor2=Label(font=('Arial',20),bg='white',fg='black',width=15,bd=2,
+labelsensor2=Label(font=('Arial',20),bg='white',fg='black',width=5,bd=2,
             relief=SUNKEN).grid(row=4,column=2)
+sath2=Entry(font=('Arial',20),bg='white',fg='blue',width=5,bd=2,
+            relief=SUNKEN).grid(row=4,column=3)
 button21=Button(window,width=5,command=on3,text='tepaga',fg='white',bg='green',font=('italic',14,'bold')).grid(row=4,column=4,padx=3,pady=6)
 button22=Button(window,width=5,command=off2,text='stop',fg='white',bg='red',font=('italic',14,'bold')).grid(row=4,column=5,padx=3,pady=6)
 button23=Button(window,width=5,command=on4,text='pastga',fg='black',bg='yellow',font=('italic',14,'bold')).grid(row=4,column=6,padx=3,pady=6)
@@ -278,22 +313,24 @@ button23=Button(window,width=5,command=on4,text='pastga',fg='black',bg='yellow',
 
 
 label3=Button(text='3',fg='yellow',bg='blue',width=2,font=('italic',20,'bold')).grid(row=5,column=1,padx=3,pady=6)
-labelsensor3=Label(font=('Arial',20),text='',bg='white',fg='blue',width=15,bd=2,
+labelsensor3=Label(font=('Arial',20),text='',bg='white',fg='blue',width=5,bd=2,
             relief=SUNKEN).grid(row=5,column=2)
+sath3=Entry(font=('Arial',20),bg='white',fg='blue',width=5,bd=2,
+            relief=SUNKEN).grid(row=5,column=3)
 button31=Button(window,width=5,text='tepaga',command=on5,fg='white',bg='green',font=('italic',14,'bold')).grid(row=5,column=4,padx=3,pady=6)
 button32=Button(window,width=5,text='stop',command=off3,fg='white',bg='red',font=('italic',14,'bold')).grid(row=5,column=5,padx=3,pady=6)
 button33=Button(window,width=5,text='pastga',command=on6,fg='black',bg='yellow',font=('italic',14,'bold')).grid(row=5,column=6,padx=3,pady=6)
 
 
-buttonIn=Button(text='zey-yop',fg='white',bg='blue',width=7,font=('italic',16,'bold')).grid(row=9,column=1,padx=3,pady=6)
-buttonOut=Button(text='polvon',fg='white',bg='blue',width=7,font=('italic',16,'bold')).grid(row=9,column=2,padx=3,pady=6)
-buttonOutPut2=Button(text='polvon  zey pastki  ',fg='white',bg='blue',width=15,font=('italic',16,'bold')).grid(row=9,column=3,padx=3,pady=6)
+buttonIn=Button(text='zey-yop',fg='white',bg='blue',width=7,font=('italic',16,'bold')).grid(row=10,column=1,padx=3,pady=6)
+buttonOut=Button(text='polvon',fg='white',bg='blue',width=7,font=('italic',16,'bold')).grid(row=11,column=1,padx=3,pady=6)
+buttonOutPut2=Button(text='zey pastki  ',fg='white',bg='blue',width=10,font=('italic',12,'bold')).grid(row=12,column=1,padx=3,pady=6)
 
 
 
-labelIN=Label(font=('Arial',18),bd=2, relief=SUNKEN,bg='white',fg='black',width=8).grid(row=10,column=1)
-labelOut1=Label(font=('Arial',18),bd=2, relief=SUNKEN,bg='white',fg='black',width=8).grid(row=10,column=2)
-labelOut2=Label(font=('Arial',18),bd=2, relief=SUNKEN,bg='white',fg='black',width=8).grid(row=10,column=3)
+labelIN=Label(font=('Arial',18),bd=2, relief=SUNKEN,bg='white',fg='black',width=8).grid(row=10,column=2)
+labelOut1=Label(font=('Arial',18),bd=2, relief=SUNKEN,bg='white',fg='black',width=8).grid(row=11,column=2)
+labelOut2=Label(font=('Arial',18),bd=2, relief=SUNKEN,bg='white',fg='black',width=8).grid(row=12,column=2)
 
 water_sensor()
 

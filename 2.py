@@ -31,12 +31,18 @@ mydb = mysql.connector.connect(
     password='masterkalit',
     database='modbus_mysql' )
 mycursor=mydb.cursor()
-s='sdfghjhgf'
+#s='sdfghjhgf'
 def baza():
-    sql="INSERT INTO check_motor (motor_number,status) VALUES (%s, %s)"
-    val = (1, s)
-    mycursor.execute(sql,val)
-    mydb.commit()
+    # sql="INSERT INTO check_motor (motor_number,status) VALUES (%s, %s)"
+    # val = (1, s)
+    # mycursor.execute(sql,val)
+    mycursor.execute("SELECT name FROM ismlar where id=4")
+
+    mycursor1 = mycursor.fetchall()
+    print(mycursor.execute("SELECT name FROM ismlar where id='4'")
+)
+
+
 b=str(3125)
 Button(window,command=baza,text='Baza' ).pack()
 print(int(b[0:len(b)-1])/100)
