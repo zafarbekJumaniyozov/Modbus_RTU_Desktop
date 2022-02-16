@@ -6,6 +6,8 @@ import minimalmodbus
 from time import sleep
 import datetime
 
+from setuptools import sic
+
 mydb = mysql.connector.connect(
     host='localhost',
     port=3306,
@@ -17,71 +19,72 @@ mycursor = mydb.cursor()
 mycursor.execute("SELECT comport FROM s_obekt where indeks='Xiva'")
 exCom = str(mycursor.fetchone())
 comport = 'COM' + exCom[1:len(exCom) - 2]
+simulyator = 0
+if simulyator == 1:
+    client1 = minimalmodbus.Instrument(comport, 1)  # port name, slave address (in decimal)
+    client1.serial.baudrate = 9600
+    # baudrate
+    client1.serial.bytesize = 8
+    client1.serial.parity = serial.PARITY_NONE
+    client1.serial.stopbits = 1
+    client1.serial.timeout = 2  # seconds
+    client1.address = 1  # Motor qo'shish  uchun Xiva
 
-client1 = minimalmodbus.Instrument(comport, 1)  # port name, slave address (in decimal)
-client1.serial.baudrate = 9600
-# baudrate
-client1.serial.bytesize = 8
-client1.serial.parity = serial.PARITY_NONE
-client1.serial.stopbits = 1
-client1.serial.timeout = 2  # seconds
-client1.address = 1  # Motor qo'shish  uchun Xiva
+    client2 = minimalmodbus.Instrument(comport, 1)  # port name, slave address (in decimal)
+    client2.serial.baudrate = 9600
+    # baudrate
+    client2.serial.bytesize = 8
+    client2.serial.parity = serial.PARITY_NONE
+    client2.serial.stopbits = 1
+    client2.serial.timeout = 2  # seconds
+    client2.address = 4  # Motor datchiklar 4, 3, 2   uchun Xiva
 
-client2 = minimalmodbus.Instrument(comport, 1)  # port name, slave address (in decimal)
-client2.serial.baudrate = 9600
-# baudrate
-client2.serial.bytesize = 8
-client2.serial.parity = serial.PARITY_NONE
-client2.serial.stopbits = 1
-client2.serial.timeout = 2  # seconds
-client2.address = 4  # Motor datchiklar 4, 3, 2   uchun Xiva
+    client3 = minimalmodbus.Instrument(comport, 1)  # port name, slave address (in decimal)
+    client3.serial.baudrate = 9600
+    # baudrate
+    client3.serial.bytesize = 8
+    client3.serial.parity = serial.PARITY_NONE
+    client3.serial.stopbits = 1
+    client3.serial.timeout = 2  # seconds
+    client3.address = 3
 
-client3 = minimalmodbus.Instrument(comport, 1)  # port name, slave address (in decimal)
-client3.serial.baudrate = 9600
-# baudrate
-client3.serial.bytesize = 8
-client3.serial.parity = serial.PARITY_NONE
-client3.serial.stopbits = 1
-client3.serial.timeout = 2  # seconds
-client3.address = 3
+    client4 = minimalmodbus.Instrument(comport, 1)  # port name, slave address (in decimal)
+    client4.serial.baudrate = 9600
+    # baudrate
+    client4.serial.bytesize = 8
+    client4.serial.parity = serial.PARITY_NONE
+    client4.serial.stopbits = 1
+    client4.serial.timeout = 2  # seconds
+    client4.address = 2  # input yozilgandan kelgani
 
-client4 = minimalmodbus.Instrument(comport, 1)  # port name, slave address (in decimal)
-client4.serial.baudrate = 9600
-# baudrate
-client4.serial.bytesize = 8
-client4.serial.parity = serial.PARITY_NONE
-client4.serial.stopbits = 1
-client4.serial.timeout = 2  # seconds
-client4.address = 2  # input yozilgandan kelgani
+    client5 = minimalmodbus.Instrument(comport, 1)  # port name, slave address (in decimal)
+    client5.serial.baudrate = 9600
+    # baudrate
+    client5.serial.bytesize = 8
+    client5.serial.parity = serial.PARITY_NONE
+    client5.serial.stopbits = 1
+    client5.serial.timeout = 2  # seconds
+    client5.address = 5  # sensor 5, 6, 7  uchun Xiva
 
-client5 = minimalmodbus.Instrument(comport, 1)  # port name, slave address (in decimal)
-client5.serial.baudrate = 9600
-# baudrate
-client5.serial.bytesize = 8
-client5.serial.parity = serial.PARITY_NONE
-client5.serial.stopbits = 1
-client5.serial.timeout = 2  # seconds
-client5.address = 5  # sensor 5, 6, 7  uchun Xiva
+    client6 = minimalmodbus.Instrument(comport, 1)  # port name, slave address (in decimal)
+    client6.serial.baudrate = 9600
+    # baudrate
+    client6.serial.bytesize = 8
+    client6.serial.parity = serial.PARITY_NONE
+    client6.serial.stopbits = 1
+    client6.serial.timeout = 2  # seconds
+    client6.address = 6
 
-client6 = minimalmodbus.Instrument(comport, 1)  # port name, slave address (in decimal)
-client6.serial.baudrate = 9600
-# baudrate
-client6.serial.bytesize = 8
-client6.serial.parity = serial.PARITY_NONE
-client6.serial.stopbits = 1
-client6.serial.timeout = 2  # seconds
-client6.address = 6
+    client7 = minimalmodbus.Instrument(comport, 1)  # port name, slave address (in decimal)
+    client7.serial.baudrate = 9600
+    # baudrate
+    client7.serial.bytesize = 8
+    client7.serial.parity = serial.PARITY_NONE
+    client7.serial.stopbits = 1
+    client7.serial.timeout = 2
 
-client7 = minimalmodbus.Instrument(comport, 1)  # port name, slave address (in decimal)
-client7.serial.baudrate = 9600
-# baudrate
-client7.serial.bytesize = 8
-client7.serial.parity = serial.PARITY_NONE
-client7.serial.stopbits = 1
-client7.serial.timeout = 2
-
-# seconds
-client7.address = 7
+    # seconds
+    client7.address = 7
 
 
 # this is the slave address number
@@ -95,7 +98,10 @@ def motor_sensor():
 
     # sensoor1
     # past_suv=int(3200)
-    sensor1a = str(client2.read_register(1, 0, 3))
+    if simulyator != 0:
+        sensor1a = str(client2.read_register(1, 0, 3))
+    else:
+        sensor1a = '2000'
     pastki_sath1 = 2.35  # bazadan sathni olish kerak vazifa
     sensor1 = round(pastki_sath1 - float(int(sensor1a[0:len(sensor1a) - 1]) / 100), 2)
     if sensor1 > float(pastki_sath1 - 0.1):
@@ -105,7 +111,10 @@ def motor_sensor():
     labelsensor1.configure(text=sensor1)
 
     # Sensor2
-    sensor2a = str(client3.read_register(1, 0, 3))
+    if simulyator != 0:
+        sensor2a = str(client3.read_register(1, 0, 3))
+    else:
+        sensor2a = '2000'
     pastki_sath2 = 2.31
     sensor2 = round(pastki_sath2 - float(int(sensor2a[0:len(sensor2a) - 1]) / 100), 2)
 
@@ -116,7 +125,10 @@ def motor_sensor():
         client1.write_register(4,0x0200)
     # sensor3
 
-    sensor3a = str(client4.read_register(1, 0, 3))
+    if simulyator != 0:
+        sensor3a = str(client4.read_register(1, 0, 3))
+    else:
+        sensor3a = "2000"
     pastki_sath3 = 2.25
     sensor3 = round(pastki_sath3 - float(int(sensor3a[0:len(sensor3a) - 1]) / 100), 2)
     if sensor3>float(pastki_sath3-0.1):
@@ -145,10 +157,14 @@ def motor_sensor():
 
     labelsensor1.after(10000,motor_sensor)
 def on1():
-    client1.write_register(2, 0x0200)
-    client1.write_register(1, 0x0100)
+    if simulyator != 0:
+        client1.write_register(2, 0x0200)
+        client1.write_register(1, 0x0100)
 
-    sensor1a = str(client2.read_register(1, 0, 3))
+    if simulyator != 0:
+        sensor1a = str(client2.read_register(1, 0, 3))
+    else:
+        sensor1a = '2000'
 
     sensor1 = float(int(sensor1a[0:len(sensor1a) - 1]) / 100)
 
@@ -156,86 +172,84 @@ def on1():
     labelOldsensor1 = Label(window, text=str(labOldsensor1), bg="grey", width=20)
     labelOldsensor1.grid(row=3, column=3)
 
-
 def on2():
-    client1.write_register(1, 0x0200)
-    client1.write_register(2, 0x0100)
-
-
+    if simulyator != 0:
+        client1.write_register(1, 0x0200)
+        client1.write_register(2, 0x0100)
 
 def on3():
-    client1.write_register(4, 0x0200)
-    client1.write_register(3, 0x0100)
-
+    if simulyator != 0:
+        client1.write_register(4, 0x0200)
+        client1.write_register(3, 0x0100)
 
 def on4():
-    client1.write_register(3, 0x0200)
-    client1.write_register(4, 0x0100)
-
+    if simulyator != 0:
+        client1.write_register(3, 0x0200)
+        client1.write_register(4, 0x0100)
 
 def on5():
-    client1.write_register(6, 0x0200)
-    client1.write_register(5, 0x0100)
-
+    if simulyator != 0:
+        client1.write_register(6, 0x0200)
+        client1.write_register(5, 0x0100)
 
 def on6():
-    client1.write_register(5, 0x0200)
-    client1.write_register(6, 0x0100)
-
+    if simulyator != 0:
+        client1.write_register(5, 0x0200)
+        client1.write_register(6, 0x0100)
 
 def on7():
-    client1.write_register(7, 0x0100)
-
+    if simulyator != 0:
+        client1.write_register(7, 0x0100)
 
 def on8():
-    client1.write_register(8, 0x0100)
-
+    if simulyator != 0:
+        client1.write_register(8, 0x0100)
 
 def on9():
-    client1.write_register(9, 0x0100)
-
+    if simulyator != 0:
+        client1.write_register(9, 0x0100)
 
 def on10():
-    client1.write_register(10, 0x0100)
-
+    if simulyator != 0:
+        client1.write_register(10, 0x0100)
 
 def on11():
-    client1.write_register(11, 0x0100)
-
+    if simulyator != 0:
+        client1.write_register(11, 0x0100)
 
 def on12():
-    client1.write_register(12, 0x0100)
-
+    if simulyator != 0:
+        client1.write_register(12, 0x0100)
 
 def off1():
-    client1.write_register(1, 0x0200)
-    client1.write_register(2, 0x0200)
-
+    if simulyator != 0:
+        client1.write_register(1, 0x0200)
+        client1.write_register(2, 0x0200)
 
 def off2():
-    client1.write_register(3, 0x0200)
-    client1.write_register(4, 0x0200)
-
+    if simulyator != 0:
+        client1.write_register(3, 0x0200)
+        client1.write_register(4, 0x0200)
 
 def off3():
-    client1.write_register(5, 0x0200)
-    client1.write_register(6, 0x0200)
-
+    if simulyator != 0:
+        client1.write_register(5, 0x0200)
+        client1.write_register(6, 0x0200)
 
 def off4():
-    client1.write_register(7, 0x0200)
-    client1.write_register(8, 0x0200)
-
+    if simulyator != 0:
+        client1.write_register(7, 0x0200)
+        client1.write_register(8, 0x0200)
 
 def off5():
-    client1.write_register(9, 0x0200)
-    client1.write_register(10, 0x0200)
-
+    if simulyator != 0:
+        client1.write_register(9, 0x0200)
+        client1.write_register(10, 0x0200)
 
 def off6():
-    client1.write_register(11, 0x0200)
-    client1.write_register(12, 0x0200)
-
+    if simulyator != 0:
+        client1.write_register(11, 0x0200)
+        client1.write_register(12, 0x0200)
 
 def water_sensor():
     mycursor.execute("SELECT reykasathi FROM s_sensor where id=1")
@@ -246,8 +260,10 @@ def water_sensor():
 
     totalHeight = float(reyka_height[1:len(reyka_height) - 2]) + float(water_height[1:len(water_height) - 2])
 
-    sensor5a = str(client5.read_register(1, 0, 3))
-
+    if simulyator != 0:
+        sensor5a = str(client5.read_register(1, 0, 3))
+    else:
+        sensor5a = '2000'
     sensor5 = round(float(totalHeight) - float(int(sensor5a[0:len(sensor5a) - 1]) / 100), 2)
     labelIN.configure(text=sensor5)
 
@@ -274,7 +290,10 @@ def water_sensor():
     water_height = str(mycursor.fetchone())
     totalHeight = float(reyka_height[1:len(reyka_height) - 2]) + float(water_height[1:len(water_height) - 2])
 
-    sensor6a = str(client6.read_register(1, 0, 3))
+    if simulyator != 0:
+        sensor6a = str(client6.read_register(1, 0, 3))
+    else:
+        sensor6a = '2000'
 
     sensor6 = round(totalHeight - float(int(sensor6a[0:len(sensor6a) - 1]) / 100), 2)
     # #Cubini hisoblash
@@ -300,7 +319,10 @@ def water_sensor():
     mycursor.execute("SELECT sensorsathi FROM s_sensor where id=3")
     water_height = str(mycursor.fetchone())
     totalHeight = float(reyka_height[1:len(reyka_height) - 2]) + float(water_height[1:len(water_height) - 2])
-    sensor7a = str(client7.read_register(1, 0, 3))
+    if simulyator != 0:
+        sensor7a = str(client7.read_register(1, 0, 3))
+    else:
+        sensor7a = '2000'
     sensor7 = round(totalHeight - float(int(sensor7a[0:len(sensor7a) - 1]) / 100), 2)
     cub = " Select kub from suvhajmi "
     mycursor.execute(cub)
@@ -319,26 +341,21 @@ def water_sensor():
     mydb.commit()
     labelsensor1.after(5000, water_sensor)
 
-
 window = Tk()
 window.title('Polvon kanal')
 window.geometry('1200x700')
 window.configure(bg="#0099cc")
 
-label = Label(text='SUV INSHOATI NAZORATI', fg='orange', bg='blue', width=20, font=('italic', 25, 'bold')).grid(row=1,
-                                                                                                                column=3,
-                                                                                                                padx=25,
-                                                                                                                pady=6)
+label = Label(text='SUV INSHOATI NAZORATI', fg='orange', bg='blue', width=20, font=('italic', 25, 'bold'))
+label.grid(row=1,column=3,padx=25,pady=6)
 
-label1 = Label(text='1', fg='yellow', bg='blue', width=2, font=('italic', 20, 'bold')).grid(row=3, column=1, padx=3,
-                                                                                            pady=6)
+label1 = Label(text='1', fg='yellow', bg='blue', width=2, font=('italic', 20, 'bold'))
+label1.grid(row=3, column=1, padx=3,pady=6)
 
-labelsensor1 = Label(font=('Arial', 20), bg='white', fg='blue', width=5, bd=2,
-                     relief=SUNKEN)
+labelsensor1 = Label(font=('Arial', 20), bg='white', fg='blue', width=5, bd=2,relief=SUNKEN)
 labelsensor1.grid(row=3, column=2)
 
-sath1 = Entry(font=('Arial', 20), bg='white', fg='blue', width=5, bd=2,
-              relief=SUNKEN).grid(row=3, column=3)
+sath1 = Entry(font=('Arial', 20), bg='white', fg='blue', width=5, bd=2, relief=SUNKEN).grid(row=3, column=3)
 button11 = Button(window, width=5, command=on1, text='tepaga', fg='white', bg='green',
                   font=('italic', 14, 'bold')).grid(row=3, column=4, padx=3, pady=6)
 button12 = Button(window, width=5, command=off1, text='stop', fg='white', bg='red', font=('italic', 14, 'bold')).grid(
