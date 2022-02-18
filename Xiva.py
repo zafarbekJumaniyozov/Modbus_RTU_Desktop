@@ -106,12 +106,16 @@ def motor_sensor():
         sensor1a = str(client2.read_register(1, 0, 3))
     else:
         if onoff1 == 11:
-            n = str(int(sensor1a)+20)
-            sensor1a = n
+
+            if int(sensor1a)- 200 > 2:
+                sensor1a = str(int(sensor1a) - 200)
+
         if onoff1 == 12:
             n = str(int(sensor1a) - 200)
             sensor1a = n
     pastki_sath1 = 2.35  # bazadan sathni olish kerak vazifa
+    print(sensor1a)
+
     sensor1 = round(pastki_sath1 - float(int(sensor1a[0:len(sensor1a) - 1]) / 100), 2)
     if sensor1 > float(pastki_sath1 - 0.1):
         if sensr != 0:
@@ -190,7 +194,7 @@ def on1():
     else:
         onoff1 = 11
     sensorSql = "INSERT INTO asos_motor(asos_id,cm,updown,bsana,amal,user_id)VALUES (%s,%s,%s,%s,%s,%s)"
-    valSensor = (1, 20, 1, datetime.datetime.now(), 1, 1)
+    valSensor = (1, 20, onoff1, datetime.datetime.now(), 1, 1)
     mycursor.execute(sensorSql, valSensor)
     mydb.commit()
     labOldsensor1 = float(labelsensor1.cget("text"))
@@ -205,7 +209,7 @@ def on2():
     else:
         onoff1 = 12
     sensorSql = "INSERT INTO asos_motor(asos_id,cm,updown,bsana,amal,user_id)VALUES (%s,%s,%s,%s,%s,%s)"
-    valSensor = (1, 20, 2, datetime.datetime.now(), 1, 1)
+    valSensor = (1, 20, onoff1, datetime.datetime.now(), 1, 1)
     mycursor.execute(sensorSql, valSensor)
     mydb.commit()
     labOldsensor1 = float(labelsensor1.cget("text"))
