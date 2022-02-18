@@ -15,12 +15,16 @@ mydb = mysql.connector.connect(
     password='masterkalit',
     database='water')
 mycursor = mydb.cursor()
-
 mycursor.execute("SELECT comport FROM s_obekt where indeks='Xiva'")
 exCom = str(mycursor.fetchone())
 comport = 'COM' + exCom[1:len(exCom) - 2]
-simulyator = 0
-if simulyator == 1:
+global sensr
+sensr = 0
+global onoff1,onoff2,onoff3
+if sensr == 1:
+    onoff1 = 0
+    onoff2 = 0
+    onoff3 = 0
     client1 = minimalmodbus.Instrument(comport, 1)  # port name, slave address (in decimal)
     client1.serial.baudrate = 9600
     # baudrate
@@ -85,36 +89,57 @@ if simulyator == 1:
 
     # seconds
     client7.address = 7
-
+else:
+    onoff1 = 10 # simulyator
+    onoff2 = 10
+    onoff3 = 10
 
 # this is the slave address number
 # client1.mode = minimalmodbus.MODE_RTU # rtu or ascii mode
-
+sensor1a = '2000'
+sensor2a = '2000'
+sensor3a = '2000'
 def motor_sensor():
-
-
-    #shuning ichiga motor controller ham qo'shish garak
-
-
-    # sensoor1
     # past_suv=int(3200)
-    if simulyator != 0:
+    global sensor1a,sensor2a,sensor3a,onoff1
+    if sensr != 0:
         sensor1a = str(client2.read_register(1, 0, 3))
     else:
-        sensor1a = '2000'
+        if onoff1 == 11:
+            n = str(int(sensor1a)+20)
+            sensor1a = n
+        if onoff1 == 12:
+            n = str(int(sensor1a) - 200)
+            sensor1a = n
     pastki_sath1 = 2.35  # bazadan sathni olish kerak vazifa
     sensor1 = round(pastki_sath1 - float(int(sensor1a[0:len(sensor1a) - 1]) / 100), 2)
     if sensor1 > float(pastki_sath1 - 0.1):
-        client1.write_register(1, 0x0200)
+        if sensr != 0:
+            onoff1 = 0
+            client1.write_register(1, 0x0200)
+        else:
+            onoff1 = 10
+
     if sensor1 < 0.1:
-        client1.write_register(1, 0x0200)
+        if sensr != 0:
+            client1.write_register(2, 0x0200)
+            onoff1 = 0
+        else:
+            onoff1 = 10
+
+    print(onoff1)
     labelsensor1.configure(text=sensor1)
 
     # Sensor2
-    if simulyator != 0:
+    if sensr != 0:
         sensor2a = str(client3.read_register(1, 0, 3))
     else:
-        sensor2a = '2000'
+        if onoff2 == 11:
+            n = str(int(sensor2a)+20)
+            sensor2a = n
+        if onoff2 == 12:
+            n = str(int(sensor2a) - 200)
+            sensor2a = n
     pastki_sath2 = 2.31
     sensor2 = round(pastki_sath2 - float(int(sensor2a[0:len(sensor2a) - 1]) / 100), 2)
 
@@ -125,7 +150,7 @@ def motor_sensor():
         client1.write_register(4,0x0200)
     # sensor3
 
-    if simulyator != 0:
+    if sensr != 0:
         sensor3a = str(client4.read_register(1, 0, 3))
     else:
         sensor3a = "2000"
@@ -155,99 +180,126 @@ def motor_sensor():
     mycursor.execute(sensorSql3, valSensor3)
     mydb.commit()
 
-    labelsensor1.after(10000,motor_sensor)
+    labelsensor1.after(3000,motor_sensor)
 def on1():
-    if simulyator != 0:
+    global onoff1
+    if sensr != 0:
+        onoff1 = 1
         client1.write_register(2, 0x0200)
         client1.write_register(1, 0x0100)
-
-    if simulyator != 0:
-        sensor1a = str(client2.read_register(1, 0, 3))
     else:
-        sensor1a = '2000'
-
-    sensor1 = float(int(sensor1a[0:len(sensor1a) - 1]) / 100)
-
+        onoff1 = 11
+    sensorSql = "INSERT INTO asos_motor(asos_id,cm,updown,bsana,amal,user_id)VALUES (%s,%s,%s,%s,%s,%s)"
+    valSensor = (1, 20, 1, datetime.datetime.now(), 1, 1)
+    mycursor.execute(sensorSql, valSensor)
+    mydb.commit()
+    labOldsensor1 = float(labelsensor1.cget("text"))
+    labelOldsensor1 = Label(window, text=str(labOldsensor1), bg="grey", width=20)
+    labelOldsensor1.grid(row=3, column=3)
+def on2():
+    global onoff1
+    if sensr != 0:
+        onoff1 = 2
+        client1.write_register(1, 0x0200)
+        client1.write_register(2, 0x0100)
+    else:
+        onoff1 = 12
+    sensorSql = "INSERT INTO asos_motor(asos_id,cm,updown,bsana,amal,user_id)VALUES (%s,%s,%s,%s,%s,%s)"
+    valSensor = (1, 20, 2, datetime.datetime.now(), 1, 1)
+    mycursor.execute(sensorSql, valSensor)
+    mydb.commit()
     labOldsensor1 = float(labelsensor1.cget("text"))
     labelOldsensor1 = Label(window, text=str(labOldsensor1), bg="grey", width=20)
     labelOldsensor1.grid(row=3, column=3)
 
-def on2():
-    if simulyator != 0:
-        client1.write_register(1, 0x0200)
-        client1.write_register(2, 0x0100)
 
+def off1():
+    global onoff1
+    if sensr != 0:
+        client1.write_register(1, 0x0200)
+        client1.write_register(2, 0x0200)
+        onoff1 = 0
+    else:
+        onoff1 = 10
+    print(onoff1)
 def on3():
-    if simulyator != 0:
+    if sensr != 0:
+        onoff2 = 1
         client1.write_register(4, 0x0200)
         client1.write_register(3, 0x0100)
-
+    else:
+        onoff2 = 11
 def on4():
-    if simulyator != 0:
+    if sensr != 0:
+        onoff2 = 2
         client1.write_register(3, 0x0200)
         client1.write_register(4, 0x0100)
+    else:
+        onoff2 = 12
 
 def on5():
-    if simulyator != 0:
+    if sensr != 0:
+        onoff3 = 1
         client1.write_register(6, 0x0200)
         client1.write_register(5, 0x0100)
-
+    else:
+        onoff3 = 11
 def on6():
-    if simulyator != 0:
+    if sensr != 0:
+        onoff3 = 2
         client1.write_register(5, 0x0200)
         client1.write_register(6, 0x0100)
+    else:
+        onoff3 = 12
 
 def on7():
-    if simulyator != 0:
+    if sensr != 0:
         client1.write_register(7, 0x0100)
 
 def on8():
-    if simulyator != 0:
+    if sensr != 0:
         client1.write_register(8, 0x0100)
 
 def on9():
-    if simulyator != 0:
+    if sensr != 0:
         client1.write_register(9, 0x0100)
 
 def on10():
-    if simulyator != 0:
+    if sensr != 0:
         client1.write_register(10, 0x0100)
 
 def on11():
-    if simulyator != 0:
+    if sensr != 0:
         client1.write_register(11, 0x0100)
 
 def on12():
-    if simulyator != 0:
+    if sensr != 0:
         client1.write_register(12, 0x0100)
 
-def off1():
-    if simulyator != 0:
-        client1.write_register(1, 0x0200)
-        client1.write_register(2, 0x0200)
+
 
 def off2():
-    if simulyator != 0:
+    if sensr != 0:
         client1.write_register(3, 0x0200)
         client1.write_register(4, 0x0200)
 
 def off3():
-    if simulyator != 0:
+    if sensr != 0:
         client1.write_register(5, 0x0200)
         client1.write_register(6, 0x0200)
 
 def off4():
-    if simulyator != 0:
+    if sensr != 0:
         client1.write_register(7, 0x0200)
         client1.write_register(8, 0x0200)
 
 def off5():
-    if simulyator != 0:
+    if sensr != 0:
         client1.write_register(9, 0x0200)
         client1.write_register(10, 0x0200)
 
 def off6():
-    if simulyator != 0:
+    if sensr != 0:
         client1.write_register(11, 0x0200)
         client1.write_register(12, 0x0200)
 
@@ -260,7 +312,7 @@ def water_sensor():
 
     totalHeight = float(reyka_height[1:len(reyka_height) - 2]) + float(water_height[1:len(water_height) - 2])
 
-    if simulyator != 0:
+    if sensr != 0:
         sensor5a = str(client5.read_register(1, 0, 3))
     else:
         sensor5a = '2000'
@@ -276,7 +328,7 @@ def water_sensor():
         labelINCub.configure(text=kub)
     else:
         labelINCub.configure(text="not found")
-    labelINCub.configure(text=sensor5)
+    labelINCub.configure(text=kub)
     # Bazaga yozish
     sensorSql5 = "INSERT INTO water_sensor(asos_id,sensor_id,user_id,cm)VALUES (%s,%s,%s,%s)"
     valSensor5 = (1, 1, 1, sensor5)
@@ -290,7 +342,7 @@ def water_sensor():
     water_height = str(mycursor.fetchone())
     totalHeight = float(reyka_height[1:len(reyka_height) - 2]) + float(water_height[1:len(water_height) - 2])
 
-    if simulyator != 0:
+    if sensr != 0:
         sensor6a = str(client6.read_register(1, 0, 3))
     else:
         sensor6a = '2000'
@@ -319,7 +371,7 @@ def water_sensor():
     mycursor.execute("SELECT sensorsathi FROM s_sensor where id=3")
     water_height = str(mycursor.fetchone())
     totalHeight = float(reyka_height[1:len(reyka_height) - 2]) + float(water_height[1:len(water_height) - 2])
-    if simulyator != 0:
+    if sensr != 0:
         sensor7a = str(client7.read_register(1, 0, 3))
     else:
         sensor7a = '2000'
