@@ -5,7 +5,7 @@ import serial
 import minimalmodbus
 from time import sleep
 import datetime
-
+import pyautogui
 from setuptools import sic
 
 mydb = mysql.connector.connect(
@@ -186,6 +186,9 @@ def motor_sensor():
 
     labelsensor1.after(3000,motor_sensor)
 def on1():
+    res = pyautogui.password(text='Sm da oraliqni kiriting', title='Oraliq masofa', default='', mask='')
+    if res == None:
+        return
     global onoff1
     if sensr != 0:
         onoff1 = 1
@@ -201,6 +204,9 @@ def on1():
     labelOldsensor1 = Label(window, text=str(labOldsensor1), bg="grey", width=20)
     labelOldsensor1.grid(row=3, column=3)
 def on2():
+    res = pyautogui.password(text='Sm da oraliqni kiriting', title='Oraliq masofa', default='', mask='')
+    if res == None:
+        return
     global onoff1
     if sensr != 0:
         onoff1 = 2
@@ -218,6 +224,9 @@ def on2():
 
 
 def off1():
+    res = pyautogui.confirm(text='', title='1 - motor harakatini to`xtotasizmi() ?', buttons=['OK', 'Cancel'])
+    if res == 'Cancel':
+        return
     global onoff1
     if sensr != 0:
         client1.write_register(1, 0x0200)
@@ -227,6 +236,9 @@ def off1():
         onoff1 = 10
     print(onoff1)
 def on3():
+    res = pyautogui.password(text='Sm da oraliqni kiriting', title='Oraliq masofa', default='', mask='')
+    if res == None:
+        return
     if sensr != 0:
         onoff2 = 1
         client1.write_register(4, 0x0200)
@@ -234,6 +246,9 @@ def on3():
     else:
         onoff2 = 11
 def on4():
+    res = pyautogui.password(text='Sm da oraliqni kiriting', title='Oraliq masofa', default='', mask='')
+    if res == None:
+        return
     if sensr != 0:
         onoff2 = 2
         client1.write_register(3, 0x0200)
@@ -242,6 +257,9 @@ def on4():
         onoff2 = 12
 
 def on5():
+    res = pyautogui.password(text='Sm da oraliqni kiriting', title='Oraliq masofa', default='', mask='')
+    if res == None:
+        return
     if sensr != 0:
         onoff3 = 1
         client1.write_register(6, 0x0200)
@@ -249,6 +267,9 @@ def on5():
     else:
         onoff3 = 11
 def on6():
+    res = pyautogui.password(text='Sm da oraliqni kiriting', title='Oraliq masofa', default='', mask='')
+    if res == None:
+        return
     if sensr != 0:
         onoff3 = 2
         client1.write_register(5, 0x0200)
@@ -257,52 +278,53 @@ def on6():
         onoff3 = 12
 
 def on7():
+    res = pyautogui.password(text='Sm da oraliqni kiriting', title='Oraliq masofa', default='', mask='')
+    if res == None:
+        return
     if sensr != 0:
         client1.write_register(7, 0x0100)
-
 def on8():
+    res = pyautogui.password(text='Sm da oraliqni kiriting', title='Oraliq masofa', default='', mask='')
+    if res == None:
+        return
     if sensr != 0:
         client1.write_register(8, 0x0100)
-
-def on9():
-    if sensr != 0:
-        client1.write_register(9, 0x0100)
-
-def on10():
-    if sensr != 0:
-        client1.write_register(10, 0x0100)
-
-def on11():
-    if sensr != 0:
-        client1.write_register(11, 0x0100)
-
-def on12():
-    if sensr != 0:
-        client1.write_register(12, 0x0100)
-
-
-
 def off2():
+    res = pyautogui.confirm(text='', title='1 - motor harakatini to`xtotasizmi() ?', buttons=['OK', 'Cancel'])
+    if res == 'Cancel':
+        return
     if sensr != 0:
         client1.write_register(3, 0x0200)
         client1.write_register(4, 0x0200)
 
 def off3():
+    res = pyautogui.confirm(text='', title='1 - motor harakatini to`xtotasizmi() ?', buttons=['OK', 'Cancel'])
+    if res == 'Cancel':
+        return
     if sensr != 0:
         client1.write_register(5, 0x0200)
         client1.write_register(6, 0x0200)
 
 def off4():
+    res = pyautogui.confirm(text='', title='1 - motor harakatini to`xtotasizmi() ?', buttons=['OK', 'Cancel'])
+    if res == 'Cancel':
+        return
     if sensr != 0:
         client1.write_register(7, 0x0200)
         client1.write_register(8, 0x0200)
 
 def off5():
+    res = pyautogui.confirm(text='', title='1 - motor harakatini to`xtotasizmi() ?', buttons=['OK', 'Cancel'])
+    if res == 'Cancel':
+        return
     if sensr != 0:
         client1.write_register(9, 0x0200)
         client1.write_register(10, 0x0200)
 
 def off6():
+    res = pyautogui.confirm(text='', title='1 - motor harakatini to`xtotasizmi() ?', buttons=['OK', 'Cancel'])
+    if res == 'Cancel':
+        return
     if sensr != 0:
         client1.write_register(11, 0x0200)
         client1.write_register(12, 0x0200)
