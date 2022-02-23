@@ -433,7 +433,7 @@ newWindow=ttk.Notebook(window)
 firstWindow=Frame(newWindow)
 secondWindow=Frame(newWindow)
 newWindow.add(secondWindow,text="user")
-newWindow.add(firstWindow,text="login")
+newWindow.add(firstWindow,text="Settings")
 
 newWindow.pack(expand=True,fill="both")
 window.title('Polvon kanal')
