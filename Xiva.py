@@ -7,6 +7,11 @@ from time import sleep
 import datetime
 import pyautogui
 from setuptools import sic
+from tkinter import ttk
+
+
+
+
 
 mydb = mysql.connector.connect(
     host='localhost',
@@ -118,7 +123,7 @@ def motor_sensor():
     print(sensor1a)
 
     sensor1 = round(pastki_sath1 - float(int(sensor1a[0:len(sensor1a) - 1]) / 100), 2)
-    if sensor1 > float(pastki_sath1 - 0.1):
+    if sensor1 > float(pastki_sath1 - 0.2):
         if sensr != 0:
             onoff1 = 0
             client1.write_register(1, 0x0200)
@@ -204,7 +209,7 @@ def on1(onoff1=12):
         mycursor.execute(sensorSql, valSensor)
         mydb.commit()
         labOldsensor1 = float(labelsensor1.cget("text"))
-        labelOldsensor1 = Label(window, text=str(labOldsensor1), bg="grey", width=20)
+        labelOldsensor1 = Label(secondWindow,text=str(labOldsensor1), bg="grey", width=20)
         labelOldsensor1.grid(row=3, column=4)
         sath1.configure(text=str(res))
         onoff1=11
@@ -231,7 +236,7 @@ def on2(onoff1=None):
     mycursor.execute(sensorSql, valSensor)
     mydb.commit()
     labOldsensor1 = float(labelsensor1.cget("text"))
-    labelOldsensor1 = Label(window, text=str(labOldsensor1), bg="grey", width=20)
+    labelOldsensor1 = Label(secondWindow, text=str(labOldsensor1), bg="grey", width=20)
     labelOldsensor1.grid(row=3, column=4)
     sath1.configure(text=str(res2))
 
@@ -256,10 +261,14 @@ def on3():
         onoff2 = 1
         client1.write_register(4, 0x0200)
         client1.write_register(3, 0x0100)
+        labOldsensor2 = float(labelsensor2.cget("text"))
+        labelOldsensor2 = Label(window, text=str(labOldsensor2), bg="grey", width=20)
+        labelOldsensor2.grid(row=4, column=4)
+        sath2.configure(text=str(res21))
     else:
         onoff2 = 11
         labOldsensor2 = float(labelsensor2.cget("text"))
-        labelOldsensor2 = Label(window, text=str(labOldsensor2), bg="grey", width=20)
+        labelOldsensor2 = Label(secondWindow, text=str(labOldsensor2), bg="grey", width=20)
         labelOldsensor2.grid(row=4, column=4)
         sath2.configure(text=str(res21))
 def on4():
@@ -273,7 +282,7 @@ def on4():
     else:
         onoff2 = 12
         labOldsensor2 = float(labelsensor2.cget("text"))
-        labelOldsensor2 = Label(window, text=str(labOldsensor2), bg="grey", width=20)
+        labelOldsensor2 = Label(secondWindow, text=str(labOldsensor2), bg="grey", width=20)
         labelOldsensor2.grid(row=4, column=4)
         sath2.configure(text=str(res22))
 def on5():
@@ -291,7 +300,7 @@ def on5():
     else:
         onoff3 = 11
         labOldsensor3 = float(labelsensor3.cget("text"))
-        labelOldsensor3 = Label(window, text=str(labOldsensor3), bg="grey", width=20)
+        labelOldsensor3 = Label(secondWindow, text=str(labOldsensor3), bg="grey", width=20)
         labelOldsensor3.grid(row=5, column=4)
         sath3.configure(text=str(res31))
 def on6():
@@ -309,7 +318,7 @@ def on6():
     else:
         onoff3 = 12
         labOldsensor3 = float(labelsensor3.cget("text"))
-        labelOldsensor3 = Label(window, text=str(labOldsensor3), bg="grey", width=20)
+        labelOldsensor3 = Label(secondWindow, text=str(labOldsensor3), bg="grey", width=20)
         labelOldsensor3.grid(row=5, column=4)
         sath3.configure(text=str(res32))
 
@@ -420,92 +429,99 @@ def water_sensor():
     labelsensor1.after(5000, water_sensor)
 
 window = Tk()
+newWindow=ttk.Notebook(window)
+firstWindow=Frame(newWindow)
+secondWindow=Frame(newWindow)
+newWindow.add(secondWindow,text="user")
+newWindow.add(firstWindow,text="login")
+
+newWindow.pack(expand=True,fill="both")
 window.title('Polvon kanal')
 window.geometry('1200x700')
 window.configure(bg="#0099cc")
 
-label = Label(text='SUV INSHOATI NAZORATI', fg='orange', bg='blue', width=20, font=('italic', 25, 'bold'))
+label = Label(secondWindow,text='SUV INSHOATI NAZORATI', fg='orange', bg='blue', width=20, font=('italic', 25, 'bold'))
 label.grid(row=1,column=4,columnspan=3)
-Label(text='surjina sathi /m').grid(row=2,column=2,padx=1,pady=8)
-Label(text='bosilgandagi sathi /m').grid(row=2,column=3,padx=1,pady=8)
-Label(text='qanchaga kutarilishi /m').grid(row=2,column=4,padx=1,pady=8)
+Label(secondWindow,text='surjina sathi /m').grid(row=2,column=2,padx=1,pady=8)
+Label(secondWindow,text='bosilgandagi sathi /m').grid(row=2,column=3,padx=1,pady=8)
+Label(secondWindow,text='qanchaga kutarilishi /m').grid(row=2,column=4,padx=1,pady=8)
 
-label1 = Label(text='1', fg='yellow', bg='blue', width=2, font=('italic', 20, 'bold'))
+label1 = Label(secondWindow,text='1', fg='yellow', bg='blue', width=2, font=('italic', 20, 'bold'))
 label1.grid(row=3, column=1, padx=3,pady=6)
 
-labelsensor1 = Label(font=('Arial', 20), bg='white', fg='blue', width=5, bd=2,relief=SUNKEN)
+labelsensor1 = Label(secondWindow,font=('Arial', 20), bg='white', fg='blue', width=5, bd=2,relief=SUNKEN)
 labelsensor1.grid(row=3, column=2)
 
-sath1 = Label(font=('Arial', 20),text='', bg='white', fg='blue', width=5, bd=2, relief=SUNKEN)
+sath1 = Label(secondWindow,font=('Arial', 20),text='', bg='white', fg='blue', width=5, bd=2, relief=SUNKEN)
 sath1.grid(row=3, column=3,padx=0)
-button11 = Button(window, width=5, command=on1, text='tepaga', fg='white', bg='green',
+button11 = Button(secondWindow, width=5, command=on1, text='tepaga', fg='white', bg='green',
                   font=('italic', 14, 'bold')).grid(row=3, column=5, padx=1, pady=6)
-button12 = Button(window, width=5, command=off1, text='stop', fg='white', bg='red', font=('italic', 14, 'bold')).grid(
+button12 = Button(secondWindow, width=5, command=off1, text='stop', fg='white', bg='red', font=('italic', 14, 'bold')).grid(
     row=3, column=6, padx=3, pady=6)
-button13 = Button(window, width=5, command=on2, text='pastga', fg='black', bg='yellow',
+button13 = Button(secondWindow, width=5, command=on2, text='pastga', fg='black', bg='yellow',
                   font=('italic', 14, 'bold')).grid(row=3, column=7, padx=1, pady=6)
 
-label2 = Button(text='2', fg='yellow', bg='blue', width=2, font=('italic', 20, 'bold')).grid(row=4, column=1, padx=1,
+label2 = Button(secondWindow,text='2', fg='yellow', bg='blue', width=2, font=('italic', 20, 'bold')).grid(row=4, column=1, padx=1,
                                                                                              pady=6)
-labelsensor2 = Label(font=('Arial', 20), bg='white', fg='black', width=5, bd=2,
+labelsensor2 = Label(secondWindow,font=('Arial', 20), bg='white', fg='black', width=5, bd=2,
                      relief=SUNKEN)
 labelsensor2.grid(row=4, column=2)
-sath2 = Label(font=('Arial', 20), text='',bg='white', fg='blue', width=5, bd=2,
+sath2 = Label(secondWindow,font=('Arial', 20), text='',bg='white', fg='blue', width=5, bd=2,
               relief=SUNKEN)
 sath2.grid(row=4, column=3)
-button21 = Button(window, width=5, command=on3, text='tepaga', fg='white', bg='green',
+button21 = Button(secondWindow, width=5, command=on3, text='tepaga', fg='white', bg='green',
                   font=('italic', 14, 'bold')).grid(row=4, column=5, padx=1, pady=3)
-button22 = Button(window, width=5, command=off2, text='stop', fg='white', bg='red', font=('italic', 14, 'bold')).grid(
+button22 = Button(secondWindow,width=5, command=off2, text='stop', fg='white', bg='red', font=('italic', 14, 'bold')).grid(
     row=4, column=6, padx=3, pady=6)
-button23 = Button(window, width=5, command=on4, text='pastga', fg='black', bg='yellow',
+button23 = Button(secondWindow, width=5, command=on4, text='pastga', fg='black', bg='yellow',
                   font=('italic', 14, 'bold')).grid(row=4, column=7, padx=1, pady=6)
 
-label3 = Button(text='3', fg='yellow', bg='blue', width=2, font=('italic', 20, 'bold')).grid(row=5, column=1, padx=1,
+label3 = Button(secondWindow,text='3', fg='yellow', bg='blue', width=2, font=('italic', 20, 'bold')).grid(row=5, column=1, padx=1,
                                                                                              pady=6)
-labelsensor3 = Label(font=('Arial', 20), text=' ', bg='white', fg='blue', width=5, bd=2,
+labelsensor3 = Label(secondWindow,font=('Arial', 20), text=' ', bg='white', fg='blue', width=5, bd=2,
                      relief=SUNKEN)
 labelsensor3.grid(row=5, column=2)
-sath3 = Label(font=('Arial', 20), text='',bg='white', fg='blue', width=5, bd=2,
+sath3 = Label(secondWindow,font=('Arial', 20), text='',bg='white', fg='blue', width=5, bd=2,
               relief=SUNKEN)
 sath3.grid(row=5, column=3)
-button31 = Button(window, width=5, text='tepaga', command=on5, fg='white', bg='green',
+button31 = Button(secondWindow, width=5, text='tepaga', command=on5, fg='white', bg='green',
                   font=('italic', 14, 'bold')).grid(row=5, column=5, padx=1, pady=6)
-button32 = Button(window, width=5, text='stop', command=off3, fg='white', bg='red', font=('italic', 14, 'bold')).grid(
+button32 = Button(secondWindow, width=5, text='stop', command=off3, fg='white', bg='red', font=('italic', 14, 'bold')).grid(
     row=5, column=6, padx=1, pady=6)
-button33 = Button(window, width=5, text='pastga', command=on6, fg='black', bg='yellow',
+button33 = Button(secondWindow, width=5, text='pastga', command=on6, fg='black', bg='yellow',
                   font=('italic', 14, 'bold')).grid(row=5, column=7, padx=1, pady=6)
 
-buttonIn = Button(text='zey-yop', fg='white', bg='blue', width=7, font=('italic', 16, 'bold')).grid(row=10, column=1,
+buttonIn = Button(secondWindow,text='zey-yop', fg='white', bg='blue', width=7, font=('italic', 16, 'bold')).grid(row=10, column=1,
                                                                                                     padx=1, pady=6)
-buttonOut = Button(text='polvon', fg='white', bg='blue', width=7, font=('italic', 16, 'bold')).grid(row=11, column=1,
+buttonOut = Button(secondWindow,text='polvon', fg='white', bg='blue', width=7, font=('italic', 16, 'bold')).grid(row=11, column=1,
                                                                                                     padx=1, pady=6)
-buttonOutPut2 = Button(text='zey pastki  ', fg='white', bg='blue', width=10, font=('italic', 12, 'bold')).grid(row=12,
+buttonOutPut2 = Button(secondWindow,text='zey pastki  ', fg='white', bg='blue', width=10, font=('italic', 12, 'bold')).grid(row=12,
                                                                                                                column=1,
                                                                                                                padx=3,
                                                                                                                pady=6)
 
-labelIN = Label(text=' ', font=('Arial', 18), bd=2, relief=SUNKEN, bg='white', fg='black', width=8)
+labelIN = Label(secondWindow,text=' ', font=('Arial', 18), bd=2, relief=SUNKEN, bg='white', fg='black', width=8)
 labelIN.grid(row=10, column=2)
-labelOut1 = Label(text=' ', font=('Arial', 18), bd=2, relief=SUNKEN, bg='white', fg='black', width=8)
+labelOut1 = Label(secondWindow,text=' ', font=('Arial', 18), bd=2, relief=SUNKEN, bg='white', fg='black', width=8)
 labelOut1.grid(row=11, column=2)
 
-labelOut2Cub = Label(text=' ', font=('Arial', 18), bd=2, relief=SUNKEN, bg='white', fg='black', width=8)
+labelOut2Cub = Label(secondWindow,text=' ', font=('Arial', 18), bd=2, relief=SUNKEN, bg='white', fg='black', width=8)
 labelOut2Cub.grid(row=12, column=3)
-labelINCub = Label(text=' ', font=('Arial', 18), bd=2, relief=SUNKEN, bg='white', fg='black', width=8)
+labelINCub = Label(secondWindow,text=' ', font=('Arial', 18), bd=2, relief=SUNKEN, bg='white', fg='black', width=8)
 labelINCub.grid(row=10, column=3)
-labelOut1Cub = Label(text=' ', font=('Arial', 18), bd=2, relief=SUNKEN, bg='white', fg='black', width=8)
+labelOut1Cub = Label(secondWindow,text=' ', font=('Arial', 18), bd=2, relief=SUNKEN, bg='white', fg='black', width=8)
 labelOut1Cub.grid(row=11, column=3)
 
-labelOut2 = Label(text=' ', font=('Arial', 18), bd=2, relief=SUNKEN, bg='white', fg='black', width=8)
+labelOut2 = Label(secondWindow,text=' ', font=('Arial', 18), bd=2, relief=SUNKEN, bg='white', fg='black', width=8)
 labelOut2.grid(row=12, column=2)
-buttonOnM = Button(text='onM', command=motor_sensor, fg='white', bg='blue', width=7, font=('italic', 16, 'bold'))
+buttonOnM = Button(secondWindow,text='onM', command=motor_sensor, fg='white', bg='blue', width=7, font=('italic', 16, 'bold'))
 buttonOnM.grid(row=13, column=1, padx=3, pady=6)
 # buttonOffM=Button(text='offM',fg='white',bg='blue',width=10,font=('italic',12))
 # buttonOffM.grid(row=13,column=2,padx=3,pady=6)
 
-buttonOnW = Button(text='onW', command=water_sensor, fg='white', bg='blue', width=7, font=('italic', 16, 'bold'))
+buttonOnW = Button(secondWindow,text='onW', command=water_sensor, fg='white', bg='blue', width=7, font=('italic', 16, 'bold'))
 buttonOnW.grid(row=13, column=2, padx=3, pady=6)
-buttonOnCub = Button(text='OnCub', command=water_sensor, fg='white', bg='blue', width=7, font=('italic', 16, 'bold'))
+buttonOnCub = Button(secondWindow,text='OnCub', command=water_sensor, fg='white', bg='blue', width=7, font=('italic', 16, 'bold'))
 buttonOnCub.grid(row=13, column=3, padx=3, pady=6)
 # buttonOffW=Button(text='offW',fg='white',bg='blue',width=10,font=('italic',12,'bold'))
 # buttonOffW.grid(row=13,column=4,padx=3,pady=6)
