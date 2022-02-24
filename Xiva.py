@@ -6,10 +6,10 @@ import minimalmodbus
 from time import sleep
 import datetime
 import pyautogui
+from pyglet.media import player
 from setuptools import sic
 from tkinter import ttk
-
-
+import pyglet
 
 
 
@@ -192,6 +192,19 @@ def motor_sensor():
 
     labelsensor1.after(3000,motor_sensor)
 def on1(onoff1=12):
+    buyruq = "Select kub from asos where obekt_id=1 order by id desc limit 1"
+    mycursor.execute(buyruq)
+    buyruqMassiv = mycursor.fetchone()
+    buyruq1 = float(str(buyruqMassiv)[1:(len(buyruqMassiv) - 3)])
+    print(buyruq1)
+    player = pyglet.media.Player()
+    song = '1.mp3'
+    src = pyglet.media.load(song)
+    player.queue(src)
+
+    def play():
+        player.play()
+    play()
     if onoff1 != 11:
 
 
@@ -202,6 +215,8 @@ def on1(onoff1=12):
             onoff1 = 1
             client1.write_register(2, 0x0200)
             client1.write_register(1, 0x0100)
+            label2 = Label(secondWindow, text='Buyruq', fg='orange', bg='blue', width=6, font=('italic', 16, 'bold'))
+            label2.grid(row=1, column=1)
         else:
             onoff1 = 11
         sensorSql = "INSERT INTO asos_motor(asos_id,cm,updown,bsana,amal,user_id)VALUES (%s,%s,%s,%s,%s,%s)"
@@ -209,9 +224,12 @@ def on1(onoff1=12):
         mycursor.execute(sensorSql, valSensor)
         mydb.commit()
         labOldsensor1 = float(labelsensor1.cget("text"))
-        labelOldsensor1 = Label(secondWindow,text=str(labOldsensor1), bg="grey", width=20)
+        labelOldsensor1 = Label(secondWindow,text=str(labOldsensor1), bg="grey", width=7,font=('italic', 16, 'bold'))
         labelOldsensor1.grid(row=3, column=4)
         sath1.configure(text=str(res))
+
+        label2 = Label(secondWindow, text='Buyruq '+str(buyruq1)+' kub', fg='orange', bg='blue', width=15, font=('italic', 16, 'bold'))
+        label2.grid(row=1, column=1, columnspan=2)
         onoff1=11
     else:
         pyautogui.alert(text='asdsdsd')
@@ -242,6 +260,7 @@ def on2(onoff1=None):
 
 
 def off1():
+
     res = pyautogui.confirm(text='', title='1 - motor harakatini to`xtasizmi() ?', buttons=['OK', 'Cancel'])
     if res == 'Cancel':
         return
@@ -253,6 +272,7 @@ def off1():
     else:
         onoff1 = 10
     print(onoff1)
+    label2.destroy()
 def on3():
     res21 = pyautogui.password(text='Sm da oraliqni kiriting', title='Oraliq masofa', default='', mask='')
     if res21 == None:
@@ -339,6 +359,23 @@ def off3():
         client1.write_register(6, 0x0200)
 
 def water_sensor():
+    farq= "Select farq_sm from s_farq where sensor_id=1 order by id desc limit 1"
+    mycursor.execute(farq)
+    farqMassiv = mycursor.fetchone()
+    farqSath1=int(str(farqMassiv)[1:(len(farqMassiv)-3)])
+
+    farq = "Select farq_sm from s_farq where sensor_id=2 order by id desc limit 1"
+    mycursor.execute(farq)
+    farqMassiv = mycursor.fetchone()
+    farqSath2=int(str(farqMassiv)[1:(len(farqMassiv)-3)])
+
+    farq = "Select farq_sm from s_farq where sensor_id=3 order by id desc limit 1"
+    mycursor.execute(farq)
+    farqMassiv = mycursor.fetchone()
+    farqSath3=int(str(farqMassiv)[1:(len(farqMassiv)-3)])
+    #farqSath = int(str(farqMassiv[(len(farqMassiv) - 1)])[1:len(str(farqMassiv[(len(farqMassiv) - 1)])) - 2])
+
+
     mycursor.execute("SELECT reykasathi FROM s_sensor where id=1")
     reyka_height = str(mycursor.fetchone())
 
@@ -354,10 +391,13 @@ def water_sensor():
     sensor5 = round(float(totalHeight) - float(int(sensor5a[0:len(sensor5a) - 1]) / 100), 2)
     labelIN.configure(text=sensor5)
 
-    cub = " Select kub from suvhajmi "
+    cub = " Select kub from suvhajmi where sensor_id=1"   ###
     mycursor.execute(cub)
     massiv = mycursor.fetchall()
-    sensor5CM = int(sensor5 * 100)
+
+
+
+    sensor5CM = int(sensor5 * 100)+farqSath1
     if sensor5CM < 240:
         kub = str(massiv[sensor5CM])[1:len(str(massiv[sensor5CM])) - 2]
         labelINCub.configure(text=kub)
@@ -365,7 +405,7 @@ def water_sensor():
         labelINCub.configure(text="not found")
     labelINCub.configure(text=kub)
     # Bazaga yozish
-    sensorSql5 = "INSERT INTO water_sensor(asos_id,sensor_id,user_id,cm)VALUES (%s,%s,%s,%s)"
+    sensorSql5 = "INSERT INTO water_sensor(asos_id,sensor_id,user_id,suvSathi)VALUES (%s,%s,%s,%s)"
     valSensor5 = (1, 1, 1, sensor5)
     mycursor.execute(sensorSql5, valSensor5)
     mydb.commit()
@@ -384,10 +424,12 @@ def water_sensor():
 
     sensor6 = round(totalHeight - float(int(sensor6a[0:len(sensor6a) - 1]) / 100), 2)
     # #Cubini hisoblash
-    cub = " Select kub from suvhajmi "
+    cub = " Select kub from suvhajmi where sensor_id=1 "    # jadval berilishi kerak  sensor_id=2
     mycursor.execute(cub)
     massiv = mycursor.fetchall()
-    sensor6CM = int(sensor6 * 100)
+
+
+    sensor6CM = int(sensor6 * 100)+farqSath2
     if sensor6CM < 240:
         kub = str(massiv[sensor6CM])[1:len(str(massiv[sensor6CM])) - 2]
         labelOut1Cub.configure(text=kub)
@@ -395,7 +437,7 @@ def water_sensor():
         labelOut1Cub.configure(text="not found")
 
     labelOut1.configure(text=sensor6)
-    sensorSql6 = "INSERT INTO water_sensor(asos_id,sensor_id,user_id,cm)VALUES (%s,%s,%s,%s)"
+    sensorSql6 = "INSERT INTO water_sensor(asos_id,sensor_id,user_id,suvSathi)VALUES (%s,%s,%s,%s)"
     valSensor6 = (1, 2, 1, sensor6)
     mycursor.execute(sensorSql6, valSensor6)
     mydb.commit()
@@ -411,10 +453,12 @@ def water_sensor():
     else:
         sensor7a = '2000'
     sensor7 = round(totalHeight - float(int(sensor7a[0:len(sensor7a) - 1]) / 100), 2)
-    cub = " Select kub from suvhajmi "
+    cub = " Select kub from suvhajmi where sensor_id=1 "  # jadval berilishi kerak  sensor_id=3
+
+
     mycursor.execute(cub)
     massiv = mycursor.fetchall()
-    sensor7CM = int(sensor7 * 100)
+    sensor7CM = int(sensor7 * 100)+farqSath3
     if sensor7CM < 240:
         kub = str(massiv[sensor7CM])[1:len(str(massiv[sensor7CM])) - 2]
         labelOut2Cub.configure(text=kub)
@@ -422,7 +466,7 @@ def water_sensor():
         labelOut2Cub.configure(text="not found")
     labelOut2.configure(text=sensor7)
 
-    sensorSql7 = "INSERT INTO water_sensor(asos_id,sensor_id,user_id,cm)VALUES (%s,%s,%s,%s)"
+    sensorSql7 = "INSERT INTO water_sensor(asos_id,sensor_id,user_id,suvSathi)VALUES (%s,%s,%s,%s)"
     valSensor7 = (1, 3, 1, sensor7)
     mycursor.execute(sensorSql7, valSensor7)
     mydb.commit()
@@ -441,7 +485,8 @@ window.geometry('1200x700')
 window.configure(bg="#0099cc")
 
 label = Label(secondWindow,text='SUV INSHOATI NAZORATI', fg='orange', bg='blue', width=20, font=('italic', 25, 'bold'))
-label.grid(row=1,column=4,columnspan=3)
+
+label.grid(row=1,column=5,columnspan=4)
 Label(secondWindow,text='surjina sathi /m').grid(row=2,column=2,padx=1,pady=8)
 Label(secondWindow,text='bosilgandagi sathi /m').grid(row=2,column=3,padx=1,pady=8)
 Label(secondWindow,text='qanchaga kutarilishi /m').grid(row=2,column=4,padx=1,pady=8)
@@ -490,7 +535,12 @@ button32 = Button(secondWindow, width=5, text='stop', command=off3, fg='white', 
     row=5, column=6, padx=1, pady=6)
 button33 = Button(secondWindow, width=5, text='pastga', command=on6, fg='black', bg='yellow',
                   font=('italic', 14, 'bold')).grid(row=5, column=7, padx=1, pady=6)
-
+inWater=Label(secondWindow,font=('Arial', 16), text='suv sathi', bg='white', fg='blue', width=8, bd=2,
+                     relief=SUNKEN)
+inWater.grid(row=6, column=2, padx=1, pady=6)
+inWaterCub=Label(secondWindow,font=('Arial', 16), text='suv hajmi', bg='white', fg='blue', width=8, bd=2,
+                     relief=SUNKEN)
+inWaterCub.grid(row=6, column=3, padx=2, pady=6)
 buttonIn = Button(secondWindow,text='zey-yop', fg='white', bg='blue', width=7, font=('italic', 16, 'bold')).grid(row=10, column=1,
                                                                                                     padx=1, pady=6)
 buttonOut = Button(secondWindow,text='polvon', fg='white', bg='blue', width=7, font=('italic', 16, 'bold')).grid(row=11, column=1,
@@ -514,15 +564,15 @@ labelOut1Cub.grid(row=11, column=3)
 
 labelOut2 = Label(secondWindow,text=' ', font=('Arial', 18), bd=2, relief=SUNKEN, bg='white', fg='black', width=8)
 labelOut2.grid(row=12, column=2)
-buttonOnM = Button(secondWindow,text='onM', command=motor_sensor, fg='white', bg='blue', width=7, font=('italic', 16, 'bold'))
-buttonOnM.grid(row=13, column=1, padx=3, pady=6)
-# buttonOffM=Button(text='offM',fg='white',bg='blue',width=10,font=('italic',12))
+# buttonOnM = Button(secondWindow,text='onM', command=motor_sensor, fg='white', bg='blue', width=7, font=('italic', 16, 'bold'))
+# buttonOnM.grid(row=13, column=1, padx=3, pady=6)
+# # buttonOffM=Button(text='offM',fg='white',bg='blue',width=10,font=('italic',12))
 # buttonOffM.grid(row=13,column=2,padx=3,pady=6)
-
-buttonOnW = Button(secondWindow,text='onW', command=water_sensor, fg='white', bg='blue', width=7, font=('italic', 16, 'bold'))
-buttonOnW.grid(row=13, column=2, padx=3, pady=6)
-buttonOnCub = Button(secondWindow,text='OnCub', command=water_sensor, fg='white', bg='blue', width=7, font=('italic', 16, 'bold'))
-buttonOnCub.grid(row=13, column=3, padx=3, pady=6)
+#
+# buttonOnW = Button(secondWindow,text='onW', command=water_sensor, fg='white', bg='blue', width=7, font=('italic', 16, 'bold'))
+# buttonOnW.grid(row=13, column=2, padx=3, pady=6)
+# buttonOnCub = Button(secondWindow,text='OnCub', command=water_sensor, fg='white', bg='blue', width=7, font=('italic', 16, 'bold'))
+# buttonOnCub.grid(row=13, column=3, padx=3, pady=6)
 # buttonOffW=Button(text='offW',fg='white',bg='blue',width=10,font=('italic',12,'bold'))
 # buttonOffW.grid(row=13,column=4,padx=3,pady=6)
 
