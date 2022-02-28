@@ -10,9 +10,7 @@ from pyglet.media import player
 from setuptools import sic
 from tkinter import ttk
 import pyglet
-
-
-
+#Mysql ulash
 mydb = mysql.connector.connect(
     host='localhost',
     port=3306,
@@ -20,9 +18,64 @@ mydb = mysql.connector.connect(
     password='masterkalit',
     database='water')
 mycursor = mydb.cursor()
-mycursor.execute("SELECT comport FROM s_obekt where indeks='Xiva'")
+#programma qo'yilgan obekt
+obekt="Select obekt from setup"
+mycursor.execute(obekt)
+obekt = mycursor.fetchone()
+obekt = str(obekt)[1:(len(obekt) - 3)]
+#Comport o'zgartirish
+mycursor.execute("SELECT comport FROM s_obekt where id=%s",[obekt])
 exCom = str(mycursor.fetchone())
 comport = 'COM' + exCom[1:len(exCom) - 2]
+#buyruqdagi suv hajmi
+buyruqhajmi = "Select kub from asos where obekt_id=%s order by id desc limit 1"
+mycursor.execute(buyruqhajmi,[obekt])
+buyruqMassiv = mycursor.fetchone()
+buyruq1 = str(buyruqMassiv)[1:len(buyruqMassiv) - 3]
+#buyruq berilgan sana
+sana="Select sana from asos where obekt_id=%s order by id desc limit 1"
+mycursor.execute(sana,[obekt])
+sana =str( mycursor.fetchone())[19:len(str(mycursor.fetchone())) - 7]
+#me'yordan   kop suv o'tish chegarasi
+ogoh= "Select ogoh from s_obekt where id=%s "
+mycursor.execute(ogoh,[obekt])
+ogoh1 = mycursor.fetchone()
+ogoh1 = float(str(ogoh1)[1:len(ogoh1) - 3])
+#me'yordan  juda kop suv o'tish chegarasi
+alarm= "Select alarm from s_obekt where id=%s "
+mycursor.execute(alarm,[obekt])
+alarm1 = mycursor.fetchone()
+alarm1 = float(str(alarm1)[1:len(alarm1) - 3])
+#max1-motorniki
+max1= "Select max from s_motor where id=1 "
+mycursor.execute(max1)
+max1 = mycursor.fetchone()
+max1 = float(str(max1)[1:len(max1) - 3])
+#max2-motorniki
+max2= "Select max from s_motor where id=2 "
+mycursor.execute(max2)
+max2 = mycursor.fetchone()
+max2 = float(str(max2)[1:len(max2) - 3])
+
+#max3-motorniki
+max3= "Select max from s_motor where id=3 "
+mycursor.execute(max3)
+max3 = mycursor.fetchone()
+max3 = float(str(max3)[1:len(max3) - 3])
+
+#min 1-motorniki
+mycursor.execute("SELECT min FROM s_motor where id=1")
+pastki_sath1 = str(mycursor.fetchone())
+pastki_sath1 = float(pastki_sath1[1:len(pastki_sath1) - 2])
+#min 2-motorniki
+mycursor.execute("SELECT min FROM s_motor where id=2")
+pastki_sath2 = str(mycursor.fetchone())
+pastki_sath22 = float(pastki_sath2[1:len(pastki_sath2) - 2])
+#min 3-motorniki
+mycursor.execute("SELECT min FROM s_motor where id=3")
+pastki_sath3 = str(mycursor.fetchone())
+pastki_sath3 = float(pastki_sath3[1:len(pastki_sath3) - 2])
+
 global sensr
 sensr = 0
 global onoff1,onoff2,onoff3,res
@@ -102,35 +155,19 @@ else:
 
 # this is the slave address number
 # client1.mode = minimalmodbus.MODE_RTU # rtu or ascii mode
-sensor1a = '2000'
-sensor2a = '2000'
-sensor3a = '2000'
-global buyruq1
-buyruq1=66
+sensor1a = '2'
+sensor2a = '2'
+sensor3a = '2'
 
-obekt="Select obekt from setup"
-mycursor.execute(obekt)
-obekt = mycursor.fetchone()
-obekt = str(obekt)[1:(len(obekt) - 3)]
-
-buyruqKimdan = "Select kub from asos where obekt_id=%s order by id desc limit 1"
-mycursor.execute(buyruqKimdan,[obekt])
-buyruqMassiv = mycursor.fetchone()
-buyruq1 = str(buyruqMassiv)[1:len(buyruqMassiv) - 3]
-
-sana="Select sana from asos where obekt_id=%s order by id desc limit 1"
-mycursor.execute(sana,[obekt])
-sana =str( mycursor.fetchone())[19:len(str(mycursor.fetchone())) - 7]
-print(sana)
 
 
 def ogoh():
 
     labelin=labelINCub.cget('text')
-    print(labelin)
-    if(float(buyruq1)+0.2<float(labelin) and float(labelin)<float(buyruq1)+2):
-        print('sdgv')
 
+
+
+    if(float(buyruq1)+ogoh1<float(labelin) and float(labelin)<float(buyruq1)+alarm1):
         player = pyglet.media.Player()
         song = 'ogoh.mp3'
         src = pyglet.media.load(song)
@@ -138,7 +175,7 @@ def ogoh():
         def play():
             player.play()
         play()
-    elif(float(float(buyruq1)+2)<float(labelin)):
+    elif(float(float(buyruq1)+alarm1)<float(labelin)):
         player = pyglet.media.Player()
         song = 'alarm.mp3'
         src = pyglet.media.load(song)
@@ -149,27 +186,141 @@ def ogoh():
         play()
     labelINCub.after(3000, ogoh)
 
+def on1():
+    global onoff1
+    if onoff1 != 11:
+
+
+        res = pyautogui.password(text='Sm da oraliqni kiriting', title='Oraliq masofa', default='', mask='')
+        if res == None:
+            return
+        if sensr != 0:
+            onoff1 = 1
+            client1.write_register(2, 0x0200)
+            client1.write_register(1, 0x0100)
+
+        else:
+            onoff1 = 11
+        sensorSql = "INSERT INTO asos_motor(asos_id,cm,updown,bsana,amal,user_id)VALUES (%s,%s,%s,%s,%s,%s)"
+        valSensor = (1, 20, onoff1, datetime.datetime.now(), 1, 1)
+        mycursor.execute(sensorSql, valSensor)
+        mydb.commit()
+
+
+
+        labOldsensor1 = float(labelsensor1.cget("text"))
+        labelOldsensor1 = Label(secondWindow,text=str(labOldsensor1), bg="grey",fg="white",  width=7,font=('italic', 16, 'bold'))
+        labelOldsensor1.grid(row=3, column=4)
+        sath1.configure(text=str(res))
+
+
+        onoff1=11
+    else:
+        pyautogui.alert(text='asdsdsd')
+        return
+
+
+
+
+def on2(onoff1=None):
+    if onoff1 == 11:
+        pyautogui.alert(text='asdsdsd')
+        return
+    res2 = pyautogui.password(text='Sm da oraliqni kiriting', title='Oraliq masofa', default='', mask='')
+    if res2 == None:
+        return
+    if sensr != 0:
+        onoff2 = 1
+        client1.write_register(1, 0x0200)
+        client1.write_register(2, 0x0100)
+    else:
+        onoff2 = 11
+    sensorSql = "INSERT INTO asos_motor(asos_id,cm,updown,bsana,amal,user_id)VALUES (%s,%s,%s,%s,%s,%s)"
+    valSensor = (1, 20, onoff1, datetime.datetime.now(), 1, 1)
+    mycursor.execute(sensorSql, valSensor)
+    mydb.commit()
+    labOldsensor1 = float(labelsensor1.cget("text"))
+    labelOldsensor1 = Label(secondWindow, text=str(labOldsensor1), bg="grey", fg="white",  width=7,font=('italic', 16, 'bold'))
+    labelOldsensor1.grid(row=3, column=4)
+    sath1.configure(text=str(res2))
+
+def on3():
+    res21 = pyautogui.password(text='Sm da oraliqni kiriting', title='Oraliq masofa', default='', mask='')
+    if res21 == None:
+        return
+    if sensr != 0:
+        onoff2 = 1
+        client1.write_register(4, 0x0200)
+        client1.write_register(3, 0x0100)
+
+    else:
+        onoff2 = 11
+    labOldsensor2 = float(labelsensor2.cget("text"))
+    labelOldsensor2 = Label(secondWindow, text=str(labOldsensor2),bg="grey",fg="white",  width=7,font=('italic', 16, 'bold'))
+    labelOldsensor2.grid(row=4, column=4)
+    sath2.configure(text=str(res21))
+def on4():
+    res22 = pyautogui.password(text='Sm da oraliqni kiriting', title='Oraliq masofa', default='', mask='')
+    if res22 == None:
+        return
+    if sensr != 0:
+        onoff2 = 2
+        client1.write_register(3, 0x0200)
+        client1.write_register(4, 0x0100)
+    else:
+        onoff2 = 12
+    labOldsensor2 = float(labelsensor2.cget("text"))
+    labelOldsensor2 = Label(secondWindow, text=str(labOldsensor2), bg="grey", fg="white",  width=7,font=('italic', 16, 'bold'))
+    labelOldsensor2.grid(row=4, column=4)
+    sath2.configure(text=str(res22))
+def on5():
+    res31 = pyautogui.password(text='Sm da oraliqni kiriting', title='Oraliq masofa', default='', mask='')
+    if res31 == None:
+        return
+    if sensr != 0:
+        onoff3 = 1
+        client1.write_register(6, 0x0200)
+        client1.write_register(5, 0x0100)
+
+    else:
+        onoff3 = 11
+    labOldsensor3 = float(labelsensor3.cget("text"))
+    labelOldsensor3 = Label(secondWindow, text=str(labOldsensor3), bg="grey", fg="white",  width=7,font=('italic', 16, 'bold'))
+    labelOldsensor3.grid(row=5, column=4)
+    sath3.configure(text=str(res31))
+def on6():
+    res32 = pyautogui.password(text='Sm da oraliqni kiriting', title='Oraliq masofa', default='', mask='')
+    if res32 == None:
+        return
+    if sensr != 0:
+        onoff3 = 2
+        client1.write_register(5, 0x0200)
+        client1.write_register(6, 0x0100)
+
+    else:
+        onoff3 = 12
+    labOldsensor3 = float(labelsensor3.cget("text"))
+    labelOldsensor3 = Label(secondWindow, text=str(labOldsensor3), bg="grey", fg="white",  width=7,font=('italic', 16, 'bold'))
+    labelOldsensor3.grid(row=5, column=4)
+    sath3.configure(text=str(res32))
 
 def motor_sensor():
-    # past_suv=int(3200)
     global sensor1a,sensor2a,sensor3a,onoff1,res
     if sensr == 1:
         sensor1a = str(client2.read_register(1, 0, 3))
     else:
         if onoff1 == 11:
 
-            if int(sensor1a)- 200 > 2:
-                sensor1a = str(int(sensor1a) +res)
+            if int(sensor1a)- 0.200 > 2:
+                sensor1a = str(float(sensor1a) +0.200)
+                print(sensor1a)
 
         if onoff1 == 12:
-            n = str(int(sensor1a) - res)
+            n = str(int(sensor1a) - 200)
             sensor1a = n
-    mycursor.execute("SELECT min FROM s_motor where id=1")
-    pastki_sath1 = str(mycursor.fetchone())
-    pastki_sath1 = float(pastki_sath1[1:len(pastki_sath1) - 2])
-    print(pastki_sath1)
+
 #######################
-    sensor1 = round(pastki_sath1 - float(int(sensor1a[0:len(sensor1a) - 1]) / 100), 2)
+    sensor1 = round(pastki_sath1 - float(float(sensor1a[0:len(sensor1a) ]) / 100), 2)
 #######################
     if sensor1 > float(pastki_sath1 - 0.2):
         if sensr != 0:
@@ -193,31 +344,26 @@ def motor_sensor():
         sensor2a = str(client3.read_register(1, 0, 3))
     else:
         if onoff2 == 11:
-            n = str(int(sensor2a)+20)
+            n = str(float(sensor2a)+0.20)
             sensor2a = n
         if onoff2 == 12:
-            n = str(int(sensor2a) - 200)
+            n = str(float(sensor2a) - 0.200)
             sensor2a = n
-    mycursor.execute("SELECT min FROM s_motor where id=2")
-    pastki_sath2 = str(mycursor.fetchone())
-    pastki_sath22  =float(pastki_sath2[1:len(pastki_sath2) - 2])
-    print(pastki_sath22)
-    sensor2 = round(pastki_sath22 - float(int(sensor2a[0:len(sensor2a) - 1]) / 100), 2)
+
+    sensor2 = round(pastki_sath22 - float(float(sensor2a[0:len(sensor2a) ]) / 100), 2)
 
     labelsensor2.configure(text=sensor2)
-    if sensor2>float(pastki_sath22-0.1):
-        client1.write_register(3,0x0200)
-    if sensor2<0.1:
-        client1.write_register(4,0x0200)
+    # if sensor2>float(pastki_sath22-0.1):
+    #     client1.write_register(3,0x0200)
+    # if sensor2<0.1:
+    #     client1.write_register(4,0x0200)
     # sensor3
 
     if sensr != 0:
         sensor3a = str(client4.read_register(1, 0, 3))
     else:
         sensor3a = "2000"
-    mycursor.execute("SELECT min FROM s_motor where id=3")
-    pastki_sath3 = str(mycursor.fetchone())
-    pastki_sath3 = float(pastki_sath3[1:len(pastki_sath3) - 2])
+
     sensor3 = round(pastki_sath3 - float(int(sensor3a[0:len(sensor3a) - 1]) / 100), 2)
     if sensor3>float(pastki_sath3-0.1):
         client1.write_register(5,0x0200)
@@ -244,59 +390,6 @@ def motor_sensor():
     mydb.commit()
 
     labelsensor1.after(3000,motor_sensor)
-def on1(onoff1=12):
-
-    if onoff1 != 11:
-
-
-        res = pyautogui.password(text='Sm da oraliqni kiriting', title='Oraliq masofa', default='', mask='')
-        if res == None:
-            return
-        if sensr != 0:
-            onoff1 = 1
-            client1.write_register(2, 0x0200)
-            client1.write_register(1, 0x0100)
-
-        else:
-            onoff1 = 11
-        sensorSql = "INSERT INTO asos_motor(asos_id,cm,updown,bsana,amal,user_id)VALUES (%s,%s,%s,%s,%s,%s)"
-        valSensor = (1, 20, onoff1, datetime.datetime.now(), 1, 1)
-        mycursor.execute(sensorSql, valSensor)
-        mydb.commit()
-        labOldsensor1 = float(labelsensor1.cget("text"))
-        labelOldsensor1 = Label(secondWindow,text=str(labOldsensor1), bg="grey", width=7,font=('italic', 16, 'bold'))
-        labelOldsensor1.grid(row=3, column=4)
-        sath1.configure(text=str(res))
-
-        label2 = Label(secondWindow, text='Buyruq '+str(buyruq1)+' kub', fg='orange', bg='blue', width=15, font=('italic', 16, 'bold'))
-        label2.grid(row=1, column=1, columnspan=2)
-        onoff1=11
-    else:
-        pyautogui.alert(text='asdsdsd')
-        return
-
-
-def on2(onoff1=None):
-    if onoff1 == 11:
-        pyautogui.alert(text='asdsdsd')
-        return
-    res2 = pyautogui.password(text='Sm da oraliqni kiriting', title='Oraliq masofa', default='', mask='')
-    if res2 == None:
-        return
-    if sensr != 0:
-        onoff2 = 1
-        client1.write_register(1, 0x0200)
-        client1.write_register(2, 0x0100)
-    else:
-        onoff2 = 11
-    sensorSql = "INSERT INTO asos_motor(asos_id,cm,updown,bsana,amal,user_id)VALUES (%s,%s,%s,%s,%s,%s)"
-    valSensor = (1, 20, onoff1, datetime.datetime.now(), 1, 1)
-    mycursor.execute(sensorSql, valSensor)
-    mydb.commit()
-    labOldsensor1 = float(labelsensor1.cget("text"))
-    labelOldsensor1 = Label(secondWindow, text=str(labOldsensor1), bg="grey", width=20)
-    labelOldsensor1.grid(row=3, column=4)
-    sath1.configure(text=str(res2))
 
 
 def off1():
@@ -313,69 +406,6 @@ def off1():
         onoff1 = 10
     print(onoff1)
     label2.destroy()
-def on3():
-    res21 = pyautogui.password(text='Sm da oraliqni kiriting', title='Oraliq masofa', default='', mask='')
-    if res21 == None:
-        return
-    if sensr != 0:
-        onoff2 = 1
-        client1.write_register(4, 0x0200)
-        client1.write_register(3, 0x0100)
-
-    else:
-        onoff2 = 11
-    labOldsensor2 = float(labelsensor2.cget("text"))
-    labelOldsensor2 = Label(secondWindow, text=str(labOldsensor2), bg="grey", width=20)
-    labelOldsensor2.grid(row=4, column=4)
-    sath2.configure(text=str(res21))
-def on4():
-    res22 = pyautogui.password(text='Sm da oraliqni kiriting', title='Oraliq masofa', default='', mask='')
-    if res22 == None:
-        return
-    if sensr != 0:
-        onoff2 = 2
-        client1.write_register(3, 0x0200)
-        client1.write_register(4, 0x0100)
-    else:
-        onoff2 = 12
-    labOldsensor2 = float(labelsensor2.cget("text"))
-    labelOldsensor2 = Label(secondWindow, text=str(labOldsensor2), bg="grey", width=20)
-    labelOldsensor2.grid(row=4, column=4)
-    sath2.configure(text=str(res22))
-def on5():
-    res31 = pyautogui.password(text='Sm da oraliqni kiriting', title='Oraliq masofa', default='', mask='')
-    if res31 == None:
-        return
-    if sensr != 0:
-        onoff3 = 1
-        client1.write_register(6, 0x0200)
-        client1.write_register(5, 0x0100)
-
-    else:
-        onoff3 = 11
-    labOldsensor3 = float(labelsensor3.cget("text"))
-    labelOldsensor3 = Label(secondWindow, text=str(labOldsensor3), bg="grey", width=20)
-    labelOldsensor3.grid(row=5, column=4)
-    sath3.configure(text=str(res31))
-def on6():
-    res32 = pyautogui.password(text='Sm da oraliqni kiriting', title='Oraliq masofa', default='', mask='')
-    if res32 == None:
-        return
-    if sensr != 0:
-        onoff3 = 2
-        client1.write_register(5, 0x0200)
-        client1.write_register(6, 0x0100)
-        labOldsensor3 = float(labelsensor3.cget("text"))
-        labelOldsensor3 = Label(window, text=str(labOldsensor3), bg="grey", width=20)
-        labelOldsensor3.grid(row=5, column=4)
-        sath3.configure(text=str(res32))
-    else:
-        onoff3 = 12
-        labOldsensor3 = float(labelsensor3.cget("text"))
-        labelOldsensor3 = Label(secondWindow, text=str(labOldsensor3), bg="grey", width=20)
-        labelOldsensor3.grid(row=5, column=4)
-        sath3.configure(text=str(res32))
-
 def off2():
     res = pyautogui.confirm(text='', title='1 - motor harakatini to`xtotasizmi() ?', buttons=['OK', 'Cancel'])
     if res == 'Cancel':
@@ -521,9 +551,9 @@ window.configure(bg="#0099cc")
 
 label = Label(secondWindow,text='Buyruq ', fg='white', bg='black', width=7, font=('italic', 12, 'bold'))
 
-label2 = Label(secondWindow, text= str(buyruq1) , fg='black', bg='white', width=4,
+label2b = Label(secondWindow, text= str(buyruq1) , fg='black', bg='white', width=4,
                font=('italic', 16, 'bold'))
-label2.grid(row=1, column=1,columnspan=2 )
+label2b.grid(row=1, column=1,columnspan=2 )
 
 label3 = Label(secondWindow, text= str(sana) , fg='black', bg='white', width=16,
                font=('italic', 16, 'bold'))
@@ -552,7 +582,7 @@ button12 = Button(secondWindow, width=5, command=off1, text='stop', fg='white', 
 button13 = Button(secondWindow, width=5, command=on2, text='pastga', fg='black', bg='yellow',
                   font=('italic', 14, 'bold')).grid(row=3, column=7, padx=1, pady=6)
 
-label2 = Button(secondWindow,text='2', fg='yellow', bg='blue', width=2, font=('italic', 20, 'bold')).grid(row=4, column=1, padx=1,
+label2 = Label(secondWindow,text='2', fg='yellow', bg='blue', width=2, font=('italic', 20, 'bold')).grid(row=4, column=1, padx=1,
                                                                                              pady=6)
 labelsensor2 = Label(secondWindow,font=('Arial', 20), bg='white', fg='black', width=5, bd=2,
                      relief=SUNKEN)
@@ -567,7 +597,7 @@ button22 = Button(secondWindow,width=5, command=off2, text='stop', fg='white', b
 button23 = Button(secondWindow, width=5, command=on4, text='pastga', fg='black', bg='yellow',
                   font=('italic', 14, 'bold')).grid(row=4, column=7, padx=1, pady=6)
 
-label3 = Button(secondWindow,text='3', fg='yellow', bg='blue', width=2, font=('italic', 20, 'bold')).grid(row=5, column=1, padx=1,
+label3 = Label(secondWindow,text='3', fg='yellow', bg='blue', width=2, font=('italic', 20, 'bold')).grid(row=5, column=1, padx=1,
                                                                                              pady=6)
 labelsensor3 = Label(secondWindow,font=('Arial', 20), text=' ', bg='white', fg='blue', width=5, bd=2,
                      relief=SUNKEN)
@@ -587,11 +617,11 @@ inWater.grid(row=6, column=2, padx=1, pady=6)
 inWaterCub=Label(secondWindow,font=('Arial', 16), text='suv hajmi', bg='white', fg='blue', width=8, bd=2,
                      relief=SUNKEN)
 inWaterCub.grid(row=6, column=3, padx=2, pady=6)
-buttonIn = Button(secondWindow,text='zey-yop', fg='white', bg='blue', width=7, font=('italic', 16, 'bold')).grid(row=10, column=1,
+labelInZey = Label(secondWindow,text='zey-yop', fg='white', bg='blue', width=7, font=('italic', 16, 'bold')).grid(row=10, column=1,
                                                                                                     padx=1, pady=6)
-buttonOut = Button(secondWindow,text='polvon', fg='white', bg='blue', width=7, font=('italic', 16, 'bold')).grid(row=11, column=1,
+labelOutPlovon = Label(secondWindow,text='polvon', fg='white', bg='blue', width=7, font=('italic', 16, 'bold')).grid(row=11, column=1,
                                                                                                     padx=1, pady=6)
-buttonOutPut2 = Button(secondWindow,text='zey pastki  ', fg='white', bg='blue', width=10, font=('italic', 12, 'bold')).grid(row=12,
+labelOutPut2 = Label(secondWindow,text='zey pastki  ', fg='white', bg='blue', width=10, font=('italic', 12, 'bold')).grid(row=12,
                                                                                                                column=1,
                                                                                                                padx=3,
                                                                                                                pady=6)
