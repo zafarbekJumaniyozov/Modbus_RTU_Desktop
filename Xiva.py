@@ -70,12 +70,12 @@ pastki_sath1 = float(pastki_sath1[1:len(pastki_sath1) - 2])
 #min 2-motorniki
 mycursor.execute("SELECT min FROM s_motor where id=2")
 pastki_sath2 = str(mycursor.fetchone())
-pastki_sath22 = float(pastki_sath2[1:len(pastki_sath2) - 2])
+pastki_sath2 = float(pastki_sath2[1:len(pastki_sath2) - 2])
 #min 3-motorniki
 mycursor.execute("SELECT min FROM s_motor where id=3")
 pastki_sath3 = str(mycursor.fetchone())
 pastki_sath3 = float(pastki_sath3[1:len(pastki_sath3) - 2])
-
+print(pastki_sath3)
 global sensr
 sensr = 0
 global onoff1,onoff2,onoff3,res
@@ -155,19 +155,15 @@ else:
 
 # this is the slave address number
 # client1.mode = minimalmodbus.MODE_RTU # rtu or ascii mode
-sensor1a = '2'
-sensor2a = '2'
-sensor3a = '2'
+sensor1a = '1100'
+sensor2a = '1500'
+sensor3a = '2000'
 
 
 
 def ogoh():
-
     labelin=labelINCub.cget('text')
-
-
-
-    if(float(buyruq1)+ogoh1<float(labelin) and float(labelin)<float(buyruq1)+alarm1):
+    if(float(buyruq1)+ogoh1<float(labelin)  and float(labelin)<float(buyruq1)+alarm1):
         player = pyglet.media.Player()
         song = 'ogoh.mp3'
         src = pyglet.media.load(song)
@@ -184,7 +180,7 @@ def ogoh():
         def play():
             player.play()
         play()
-    labelINCub.after(3000, ogoh)
+    labelINCub.after(15000, ogoh)
 
 def on1():
     global onoff1
@@ -201,40 +197,46 @@ def on1():
 
         else:
             onoff1 = 11
-        sensorSql = "INSERT INTO asos_motor(asos_id,cm,updown,bsana,amal,user_id)VALUES (%s,%s,%s,%s,%s,%s)"
-        valSensor = (1, 20, onoff1, datetime.datetime.now(), 1, 1)
-        mycursor.execute(sensorSql, valSensor)
-        mydb.commit()
-
-
-
-        labOldsensor1 = float(labelsensor1.cget("text"))
-        labelOldsensor1 = Label(secondWindow,text=str(labOldsensor1), bg="grey",fg="white",  width=7,font=('italic', 16, 'bold'))
-        labelOldsensor1.grid(row=3, column=4)
-        sath1.configure(text=str(res))
 
 
         onoff1=11
     else:
-        pyautogui.alert(text='asdsdsd')
+        pyautogui.alert(text="Motor ishlayapti to'xtashini kuting")
         return
+    sensorSql = "INSERT INTO asos_motor(asos_id,cm,updown,bsana,amal,user_id)VALUES (%s,%s,%s,%s,%s,%s)"
+    valSensor = (1, 20, onoff1, datetime.datetime.now(), 1, 1)
+    mycursor.execute(sensorSql, valSensor)
+    mydb.commit()
+
+
+
+    labOldsensor1 = float(labelsensor1.cget("text"))
+    labelOldsensor1 = Label(secondWindow,text=str(labOldsensor1), bg="grey",fg="white",  width=7,font=('italic', 16, 'bold'))
+    labelOldsensor1.grid(row=3, column=4)
+    sath1.configure(text=str(res))
 
 
 
 
-def on2(onoff1=None):
-    if onoff1 == 11:
-        pyautogui.alert(text='asdsdsd')
-        return
-    res2 = pyautogui.password(text='Sm da oraliqni kiriting', title='Oraliq masofa', default='', mask='')
-    if res2 == None:
-        return
-    if sensr != 0:
-        onoff2 = 1
-        client1.write_register(1, 0x0200)
-        client1.write_register(2, 0x0100)
+def on2():
+    global onoff1
+    if onoff1 != 12:
+
+        res2 = pyautogui.password(text='Sm da oraliqni kiriting', title='Oraliq masofa', default='', mask='')
+        if res2 == None:
+            return
+        if sensr != 0:
+            onoff1 = 1
+            client1.write_register(1, 0x0200)
+            client1.write_register(2, 0x0100)
+
+        else:
+            onoff1 = 12
+
+        onoff1 = 12
     else:
-        onoff2 = 11
+        pyautogui.alert(text="Motor ishlayapti to'xtashini kuting")
+        return
     sensorSql = "INSERT INTO asos_motor(asos_id,cm,updown,bsana,amal,user_id)VALUES (%s,%s,%s,%s,%s,%s)"
     valSensor = (1, 20, onoff1, datetime.datetime.now(), 1, 1)
     mycursor.execute(sensorSql, valSensor)
@@ -245,130 +247,215 @@ def on2(onoff1=None):
     sath1.configure(text=str(res2))
 
 def on3():
-    res21 = pyautogui.password(text='Sm da oraliqni kiriting', title='Oraliq masofa', default='', mask='')
-    if res21 == None:
-        return
-    if sensr != 0:
-        onoff2 = 1
-        client1.write_register(4, 0x0200)
-        client1.write_register(3, 0x0100)
+    global onoff2
+    if onoff2 != 11:
 
-    else:
+        res21 = pyautogui.password(text='Sm da oraliqni kiriting', title='Oraliq masofa', default='', mask='')
+        if 21 == None:
+            return
+        if sensr != 0:
+            onoff2 = 1
+            client1.write_register(4, 0x0200)
+            client1.write_register(3, 0x0100)
+
+        else:
+            onoff2 = 11
+
         onoff2 = 11
+    else:
+        pyautogui.alert(text="Motor ishlayapti to'xtashini kuting")
+        return
+
+    onoff2=11
     labOldsensor2 = float(labelsensor2.cget("text"))
     labelOldsensor2 = Label(secondWindow, text=str(labOldsensor2),bg="grey",fg="white",  width=7,font=('italic', 16, 'bold'))
     labelOldsensor2.grid(row=4, column=4)
     sath2.configure(text=str(res21))
 def on4():
-    res22 = pyautogui.password(text='Sm da oraliqni kiriting', title='Oraliq masofa', default='', mask='')
-    if res22 == None:
-        return
-    if sensr != 0:
-        onoff2 = 2
-        client1.write_register(3, 0x0200)
-        client1.write_register(4, 0x0100)
-    else:
+    global onoff2
+    if onoff2 != 12:
+
+        res22 = pyautogui.password(text='Sm da oraliqni kiriting', title='Oraliq masofa', default='', mask='')
+        if 22 == None:
+            return
+        if sensr != 0:
+            onoff2 = 1
+            client1.write_register(3, 0x0200)
+            client1.write_register(4, 0x0100)
+
+        else:
+            onoff2 = 12
+
         onoff2 = 12
+    else:
+        pyautogui.alert(text="Motor ishlayapti to'xtashini kuting")
+        return
+
     labOldsensor2 = float(labelsensor2.cget("text"))
     labelOldsensor2 = Label(secondWindow, text=str(labOldsensor2), bg="grey", fg="white",  width=7,font=('italic', 16, 'bold'))
     labelOldsensor2.grid(row=4, column=4)
     sath2.configure(text=str(res22))
 def on5():
-    res31 = pyautogui.password(text='Sm da oraliqni kiriting', title='Oraliq masofa', default='', mask='')
-    if res31 == None:
-        return
-    if sensr != 0:
-        onoff3 = 1
-        client1.write_register(6, 0x0200)
-        client1.write_register(5, 0x0100)
+    global onoff3
+    if onoff3 != 11:
 
-    else:
+        res31 = pyautogui.password(text='Sm da oraliqni kiriting', title='Oraliq masofa', default='', mask='')
+        if 31 == None:
+            return
+        if sensr != 0:
+            onoff3 = 1
+            client1.write_register(6, 0x0200)
+            client1.write_register(5, 0x0100)
+
+        else:
+            onoff3 = 11
+
         onoff3 = 11
+    else:
+        pyautogui.alert(text="Motor ishlayapti to'xtashini kuting")
+        return
+    onoff3=11
     labOldsensor3 = float(labelsensor3.cget("text"))
     labelOldsensor3 = Label(secondWindow, text=str(labOldsensor3), bg="grey", fg="white",  width=7,font=('italic', 16, 'bold'))
     labelOldsensor3.grid(row=5, column=4)
     sath3.configure(text=str(res31))
 def on6():
-    res32 = pyautogui.password(text='Sm da oraliqni kiriting', title='Oraliq masofa', default='', mask='')
-    if res32 == None:
-        return
-    if sensr != 0:
-        onoff3 = 2
-        client1.write_register(5, 0x0200)
-        client1.write_register(6, 0x0100)
+    global onoff3
+    if onoff3 != 12:
 
-    else:
+        res32 = pyautogui.password(text='Sm da oraliqni kiriting', title='Oraliq masofa', default='', mask='')
+        if 32 == None:
+            return
+        if sensr != 0:
+            onoff3 = 2
+            client1.write_register(3, 0x0200)
+            client1.write_register(4, 0x0100)
+
+        else:
+            onoff3 = 12
+
         onoff3 = 12
+    else:
+        pyautogui.alert(text="Motor ishlayapti to'xtashini kuting")
+        return
+
     labOldsensor3 = float(labelsensor3.cget("text"))
     labelOldsensor3 = Label(secondWindow, text=str(labOldsensor3), bg="grey", fg="white",  width=7,font=('italic', 16, 'bold'))
     labelOldsensor3.grid(row=5, column=4)
     sath3.configure(text=str(res32))
 
 def motor_sensor():
-    global sensor1a,sensor2a,sensor3a,onoff1,res
+    global sensor1a,sensor2a,sensor3a,onoff1,onoff2,onoff3,res
     if sensr == 1:
-        sensor1a = str(client2.read_register(1, 0, 3))
+        try:
+         sensor1a = str(client2.read_register(1, 0, 3))
+        except:
+            sensorXatoSql = "INSERT INTO xatosensor(motor_id,status)VALUES (%s,%s)"
+            valSensorxato = (1, 'Sensor ishlamadi')
+            mycursor.execute(sensorXatoSql, valSensorxato)
+
+            print('d')
     else:
         if onoff1 == 11:
-
-            if int(sensor1a)- 0.200 > 2:
-                sensor1a = str(float(sensor1a) +0.200)
-                print(sensor1a)
-
+            sensor1a = str(float(sensor1a) -200)
+            print(sensor1a)
+            if (float(sensor1a) < 0):
+                sensor1a ='0'
+                onoff1=10
         if onoff1 == 12:
-            n = str(int(sensor1a) - 200)
-            sensor1a = n
+             sensor1a = str(float(sensor1a) +200)
+    sensor1 = round(pastki_sath1 - (float(float(sensor1a[0:len(sensor1a) ]) / 1000)), 2)
 
-#######################
-    sensor1 = round(pastki_sath1 - float(float(sensor1a[0:len(sensor1a) ]) / 100), 2)
-#######################
     if sensor1 > float(pastki_sath1 - 0.2):
         if sensr != 0:
             onoff1 = 0
             client1.write_register(1, 0x0200)
         else:
             onoff1 = 10
+            sensor1 = pastki_sath1
 
-    if sensor1 < 0.1:
-        if sensr != 0:
+        if sensor1 < 0.1:
+         if sensr != 0:
             client1.write_register(2, 0x0200)
+            onoff1 = 0
+         else:
+            onoff1 = 10
+    if (float(sensor1a)>pastki_sath1*1000):
+        onoff1=10
+        sensor1="0"
+    print(onoff1)
+    labelsensor1.configure(text=sensor1)
+  # Sensor2
+    if sensr == 1:
+        try:
+            sensor2a = str(client2.read_register(2, 0, 3))
+        except:
+            print('d')
+            sensorXatoSql2 = "INSERT INTO xatosensor(motor_id,status)VALUES (%s,%s)"
+            valSensorxato2 = (2, 'Sensor ishlamadi')
+            mycursor.execute(sensorXatoSql2, valSensorxato2)
+    else:
+        if onoff2 == 11:
+            sensor2a = str(float(sensor2a) - 200)
+            print(sensor2a)
+            if (float(sensor2a) < 0):
+                sensor2a = '0'
+        if onoff2 == 12:
+            sensor2a = str(float(sensor2a) + 200)
+    sensor2 = round(pastki_sath2 - (float(float(sensor2a[0:len(sensor2a)]) / 1000)), 2)
+
+    if sensor2 > float(pastki_sath2 - 0.2):
+        if sensr != 0:
+            onoff2 = 0
+            client1.write_register(3, 0x0200)
+        else:
+            onoff1 = 10
+            sensor2 = pastki_sath2
+        if sensor2 < 0.1:
+            if sensr != 0:
+                client1.write_register(4, 0x0200)
+                onoff2 = 0
+            else:
+                onoff2 = 10
+    if (float(sensor2a) > pastki_sath2 * 1000):
+        onoff1 = 10
+        sensor2 = "0"
+    print(onoff1)
+    labelsensor2.configure(text=sensor2)
+    # sensor3
+    if sensr == 1:
+        try:
+            sensor3a = str(client2.read_register(3, 0, 3))
+        except:
+            sensor3a=str(client2.read_register(3, 0, 3))
+            sensorXatoSql3 = "INSERT INTO xatosensor(motor_id,status)VALUES (%s,%s)"
+            valSensorxato3 = (3, 'Sensor ishlamadi')
+            mycursor.execute(sensorXatoSql3, valSensorxato3)
+    else:
+        if onoff3 == 11:
+            sensor3a = str(float(sensor3a) - 200)
+            print(sensor3a)
+            if (float(sensor3a) < 0):
+                sensor3a = '0'
+        if onoff3 == 12:
+            sensor3a = str(float(sensor3a) + 200)
+    sensor3 = round(pastki_sath3 - (float(float(sensor3a[0:len(sensor3a)]) / 1000)), 2)
+
+    if sensor3 > float(pastki_sath3 - 0.2):
+        if sensr != 0:
+            onoff3 = 0
+            client1.write_register(5, 0x0200)
+        else:
+            onoff3 = 10
+            sensor3 = pastki_sath3
+
+    if (float(sensor3a) > pastki_sath3 * 1000):
+        if sensr != 0:
+            client1.write_register(6, 0x0200)
             onoff1 = 0
         else:
             onoff1 = 10
-
-    print(onoff1)
-    labelsensor1.configure(text=sensor1)
-
-    # Sensor2
-    if sensr != 0:
-        sensor2a = str(client3.read_register(1, 0, 3))
-    else:
-        if onoff2 == 11:
-            n = str(float(sensor2a)+0.20)
-            sensor2a = n
-        if onoff2 == 12:
-            n = str(float(sensor2a) - 0.200)
-            sensor2a = n
-
-    sensor2 = round(pastki_sath22 - float(float(sensor2a[0:len(sensor2a) ]) / 100), 2)
-
-    labelsensor2.configure(text=sensor2)
-    # if sensor2>float(pastki_sath22-0.1):
-    #     client1.write_register(3,0x0200)
-    # if sensor2<0.1:
-    #     client1.write_register(4,0x0200)
-    # sensor3
-
-    if sensr != 0:
-        sensor3a = str(client4.read_register(1, 0, 3))
-    else:
-        sensor3a = "2000"
-
-    sensor3 = round(pastki_sath3 - float(int(sensor3a[0:len(sensor3a) - 1]) / 100), 2)
-    if sensor3>float(pastki_sath3-0.1):
-        client1.write_register(5,0x0200)
-    if sensor3<0.1:
-        client1.write_register(6,0x0200)
+            sensor3 = "0"
     labelsensor3.configure(text=sensor3)
 
     # 1-motorning sensorindagi malumoti yozish
@@ -405,7 +492,6 @@ def off1():
     else:
         onoff1 = 10
     print(onoff1)
-    label2.destroy()
 def off2():
     res = pyautogui.confirm(text='', title='1 - motor harakatini to`xtotasizmi() ?', buttons=['OK', 'Cancel'])
     if res == 'Cancel':
@@ -413,6 +499,9 @@ def off2():
     if sensr != 0:
         client1.write_register(3, 0x0200)
         client1.write_register(4, 0x0200)
+    else:
+     onoff2 = 10
+    print(onoff2)
 
 def off3():
     res = pyautogui.confirm(text='', title='1 - motor harakatini to`xtotasizmi() ?', buttons=['OK', 'Cancel'])
@@ -421,6 +510,9 @@ def off3():
     if sensr != 0:
         client1.write_register(5, 0x0200)
         client1.write_register(6, 0x0200)
+    else:
+        onoff3 = 10
+    print(onoff3)
 
 def water_sensor():
     farq= "Select farq_sm from s_farq where sensor_id=1 order by id desc limit 1"
