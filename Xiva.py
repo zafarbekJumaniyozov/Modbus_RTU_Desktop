@@ -24,7 +24,7 @@ mycursor.execute(obekt)
 obekt = mycursor.fetchone()
 obekt = str(obekt)[1:(len(obekt) - 3)]
 #Comport o'zgartirish
-mycursor.execute("SELECT comport FROM s_obekt where id=%s",[obekt])
+mycursor.execute("SELECT comport FROM s_obekt where index='Hiva'")
 exCom = str(mycursor.fetchone())
 comport = 'COM' + exCom[1:len(exCom) - 2]
 #buyruqdagi suv hajmi
@@ -631,10 +631,11 @@ def water_sensor():
 
 window = Tk()
 newWindow=ttk.Notebook(window)
-firstWindow=Frame(newWindow)
+firstWindow=Frame(newWindow,bg="Khaki")
 secondWindow=Frame(newWindow)
-newWindow.add(secondWindow,text="user")
 newWindow.add(firstWindow,text="Settings")
+newWindow.add(secondWindow,text="user")
+
 
 newWindow.pack(expand=True,fill="both")
 window.title('SUV INSHOATI NAZORATI')
@@ -743,6 +744,23 @@ labelOut2.grid(row=12, column=2)
 # buttonOnCub.grid(row=13, column=3, padx=3, pady=6)
 # buttonOffW=Button(text='offW',fg='white',bg='blue',width=10,font=('italic',12,'bold'))
 # buttonOffW.grid(row=13,column=4,padx=3,pady=6)
+firstButton=Button(firstWindow,text='registr',bg='#00ffff',width='12',font=('italic', 14, 'bold'))
+firstButton.grid(row=1,column=1,padx=55,pady=160)
+firstButton2=Button(firstWindow,text='farq',bg='yellow',width='12',font=('italic', 14, 'bold'))
+firstButton2.grid(row=1,column=2,padx=35,pady=160)
+firstButton3=Button(firstWindow,text='lavozim',bg='#00ffff',width='12',font=('italic', 14, 'bold'))
+firstButton3.grid(row=1,column=3,padx=35,pady=160)
+
+firstButton4=Button(firstWindow,text='user',bg='yellow',width='12',font=('italic', 14, 'bold'))
+firstButton4.grid(row=1,column=4,padx=35,pady=160)
+firstButton5=Button(firstWindow,text='otdel',bg='#00ffff',width='12',font=('italic', 14, 'bold'))
+firstButton5.grid(row=1,column=5,padx=35,pady=160)
+
+
+
+
+
+
 
 motor_sensor()
 water_sensor()
