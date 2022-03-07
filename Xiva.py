@@ -128,14 +128,6 @@ if sensr == 1:
     motorKalit1.serial.timeout = 2  # seconds
     motorKalit1.address = 1  # Motor qo'shish  uchun Xiva
 
-    motorKalit2 = minimalmodbus.Instrument(comport, 1)  # port name, slave address (in decimal)
-    motorKalit2.serial.baudrate = 9600
-    # baudrate
-    motorKalit2.serial.bytesize = 8
-    motorKalit2.serial.parity = serial.PARITY_NONE
-    motorKalit2.serial.stopbits = 1
-    motorKalit2.serial.timeout = 2  # seconds
-    motorKalit2.address = 2  # Motor datchiklar 4, 3, 2   uchun Xiva
 
     motorsensor1 = minimalmodbus.Instrument(comport, 1)  # port name, slave address (in decimal)
     motorsensor1.serial.baudrate = 9600
@@ -144,7 +136,7 @@ if sensr == 1:
     motorsensor1.serial.parity = serial.PARITY_NONE
     motorsensor1.serial.stopbits = 1
     motorsensor1.serial.timeout = 2  # seconds
-    motorsensor1.address = 3
+    motorsensor1.address = 2
     motorsensor1.mode = minimalmodbus.MODE_RTU
 
     motorsensor2 = minimalmodbus.Instrument(comport, 1)  # port name, slave address (in decimal)
@@ -154,7 +146,7 @@ if sensr == 1:
     motorsensor2.serial.parity = serial.PARITY_NONE
     motorsensor2.serial.stopbits = 1
     motorsensor2.serial.timeout = 2  # seconds
-    motorsensor2.address = 4  # input yozilgandan kelgani
+    motorsensor2.address = 3  # input yozilgandan kelgani
     motorsensor2.mode = minimalmodbus.MODE_RTU
 
     motorsensor3 = minimalmodbus.Instrument(comport, 1)  # port name, slave address (in decimal)
@@ -164,38 +156,9 @@ if sensr == 1:
     motorsensor3.serial.parity = serial.PARITY_NONE
     motorsensor3.serial.stopbits = 1
     motorsensor3.serial.timeout = 2  # seconds
-    motorsensor3.address = 5  # sensor 5, 6, 7  uchun Xiva
+    motorsensor3.address = 4  # sensor 5, 6, 7  uchun Xiva
     motorsensor3.mode = minimalmodbus.MODE_RTU
 
-    motorsensor4 = minimalmodbus.Instrument(comport, 1)  # port name, slave address (in decimal)
-    motorKalit1.serial.baudrate = 9600
-    # baudrate
-    motorsensor4.serial.bytesize = 8
-    motorsensor4.serial.parity = serial.PARITY_NONE
-    motorsensor4.serial.stopbits = 1
-    motorsensor4.serial.timeout = 2  # seconds
-    motorsensor4.address = 6
-    motorsensor4.mode = minimalmodbus.MODE_RTU
-
-    motorsensor5 = minimalmodbus.Instrument(comport, 1)  # port name, slave address (in decimal)
-    motorsensor5.serial.baudrate = 9600
-    # baudrate
-    motorsensor5.serial.bytesize = 8
-    motorsensor5.serial.parity = serial.PARITY_NONE
-    motorsensor5.serial.stopbits = 1
-    motorsensor5.serial.timeout = 2
-    motorsensor5.address = 7
-    motorsensor5.mode = minimalmodbus.MODE_RTU
-
-    motorsensor6 = minimalmodbus.Instrument(comport, 1)  # port name, slave address (in decimal)
-    motorsensor6.serial.baudrate = 9600
-    # baudrate
-    motorsensor6.serial.bytesize = 8
-    motorsensor6.serial.parity = serial.PARITY_NONE
-    motorsensor6.serial.stopbits = 1
-    motorsensor6.serial.timeout = 2
-    motorsensor6.address = 8
-    motorsensor6.mode = minimalmodbus.MODE_RTU
 
     watersensor1 = minimalmodbus.Instrument(comport, 1)  # port name, slave address (in decimal)
     watersensor1.serial.baudrate = 9600
@@ -204,7 +167,7 @@ if sensr == 1:
     watersensor1.serial.parity = serial.PARITY_NONE
     watersensor1.serial.stopbits = 1
     watersensor1.serial.timeout = 2
-    watersensor1.address = 9
+    watersensor1.address = 5
     watersensor1.mode = minimalmodbus.MODE_RTU
 
     watersensor2 = minimalmodbus.Instrument(comport, 1)  # port name, slave address (in decimal)
@@ -214,7 +177,7 @@ if sensr == 1:
     watersensor2.serial.parity = serial.PARITY_NONE
     watersensor2.serial.stopbits = 1
     watersensor2.serial.timeout = 2
-    watersensor2.address = 10
+    watersensor2.address = 6
     watersensor2.mode = minimalmodbus.MODE_RTU
 
     watersensor3 = minimalmodbus.Instrument(comport, 1)  # port name, slave address (in decimal)
@@ -224,7 +187,7 @@ if sensr == 1:
     watersensor3.serial.parity = serial.PARITY_NONE
     watersensor3.serial.stopbits = 1
     watersensor3.serial.timeout = 2
-    watersensor3.address = 11
+    watersensor3.address = 7
     watersensor3.mode = minimalmodbus.MODE_RTU
 
 else:
