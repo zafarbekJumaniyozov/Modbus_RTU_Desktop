@@ -98,16 +98,11 @@ res=300
 sensor1a = '210'
 sensor2a = '250'
 sensor3a = '200'
-sensor4a = '210'
-sensor5a = '250'
-sensor6a = '200'
+
 if sensr == 1:
     onoff1 = 0
     onoff2 = 0
     onoff3 = 0
-    onoff4 = 0
-    onoff5 = 0
-    onoff6 = 0
 
     # client2 = minimalmodbus.Instrument(comport, 1)  # port name, slave address (in decimal)
     # client2.serial.baudrate = 9600
@@ -224,27 +219,29 @@ def ogoh():
     labelINCub.after(15000, ogoh)
 
 def on1():
-    global onoff1
+    global onoff1,sensr
+
     if onoff1 != 11:
-
-
-        res = pyautogui.password(text='Sm da oraliqni kiriting', title='Oraliq masofa', default='', mask='')
-        if res == None:
+        res11 = pyautogui.password(text='Sm da oraliqni kiriting', title='Oraliq masofa', default='', mask='')
+        onoff1 = 11
+        if res11 == None:
             return
         if sensr != 0:
             try:
                 onoff1 = 1
-                motorKalit1.write_register(2, 0x0200)
-                motorKalit1.write_register(1, 0x0100)
+                motorKalit1.write_register(1, 0x0200)
+                motorKalit1.write_register(2, 0x0100)
             except:
                 pyautogui.alert(text="signal yo'q qayta urinib ko'ring")
 
         else:
+            onoff1 = 11
 
-          return
+
     else:
         pyautogui.alert(text="Motor ishlayapti to'xtashini kuting")
         return
+
     sensorSql = "INSERT INTO asos_motor(asos_id,cm,updown,bsana,amal,user_id)VALUES (%s,%s,%s,%s,%s,%s)"
     valSensor = (1, 20, onoff1, datetime.datetime.now(), 1, 1)
     mycursor.execute(sensorSql, valSensor)
@@ -253,9 +250,9 @@ def on1():
     labOldsensor1 = float(labelsensor1.cget("text"))
     labelOldsensor1 = Label(secondWindow,text=str(labOldsensor1), bg="grey",fg="white",  width=7,font=('italic', 16, 'bold'))
     labelOldsensor1.grid(row=3, column=4)
-    sath1.configure(text=str(res))
+    sath1.configure(text=str(res11))
 def on2():
-    global onoff1
+    global onoff1,sensr
     if onoff1 != 12:
         res2 = pyautogui.password(text='Sm da oraliqni kiriting', title='Oraliq masofa', default='', mask='')
         if res2 == None:
@@ -368,7 +365,7 @@ def on5():
     sath3.configure(text=str(res31))
 def on6():
     global onoff3
-    if onoff3 != 12:
+    if onoff3 ==  12:
 
         res32 = pyautogui.password(text='Sm da oraliqni kiriting', title='Oraliq masofa', default='', mask='')
         if 32 == None:
@@ -463,7 +460,7 @@ def motor_sensor():
 
          else:
             onoff1 = 10
-    if (float(sensor1a)>pastki_sath1*1000):
+    if (float(sensor1a)>pastki_sath1*100):
         onoff1=10
         sensor1="0"
     print(onoff1)
@@ -488,7 +485,7 @@ def motor_sensor():
                     print(" aaa")
             else:
                 onoff2 = 10
-    if (float(sensor2a) > pastki_sath2 * 1000):
+    if (float(sensor2a) > pastki_sath2 * 100):
         onoff1 = 10
         sensor2 = "0"
 
@@ -505,7 +502,7 @@ def motor_sensor():
             onoff3 = 10
             sensor3 = pastki_sath3
 
-    if (float(sensor3a) > pastki_sath3 * 1000):
+    if (float(sensor3a) > pastki_sath3 * 100):
         if sensr != 0:
             try:
 
