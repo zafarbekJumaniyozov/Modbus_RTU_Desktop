@@ -24,7 +24,7 @@ mycursor.execute(obekt)
 obekt = mycursor.fetchone()
 obekt = str(obekt)[1:(len(obekt) - 3)]
 #Comport o'zgartirish
-mycursor.execute("SELECT comport FROM s_obekt where index='Hiva'")
+mycursor.execute("SELECT comport FROM s_obekt where indeks='Toshsaqa'")
 exCom = str(mycursor.fetchone())
 comport = 'COM' + exCom[1:len(exCom) - 2]
 #buyruqdagi suv hajmi
@@ -32,6 +32,7 @@ buyruqhajmi = "Select kub from asos where obekt_id=%s order by id desc limit 1"
 mycursor.execute(buyruqhajmi,[obekt])
 buyruqMassiv = mycursor.fetchone()
 buyruq1 = str(buyruqMassiv)[1:len(buyruqMassiv) - 3]
+print(buyruq1)
 #buyruq berilgan sana
 sana="Select sana from asos where obekt_id=%s order by id desc limit 1"
 mycursor.execute(sana,[obekt])
@@ -76,88 +77,165 @@ mycursor.execute("SELECT min FROM s_motor where id=3")
 pastki_sath3 = str(mycursor.fetchone())
 pastki_sath3 = float(pastki_sath3[1:len(pastki_sath3) - 2])
 print(pastki_sath3)
+#min 4-motorniki
+mycursor.execute("SELECT min FROM s_motor where id=4")
+pastki_sath4 = str(mycursor.fetchone())
+pastki_sath4 = float(pastki_sath4[1:len(pastki_sath4) - 2])
+print(pastki_sath4)
+#min 5-motorniki
+mycursor.execute("SELECT min FROM s_motor where id=5")
+pastki_sath5 = str(mycursor.fetchone())
+pastki_sath5 = float(pastki_sath5[1:len(pastki_sath5) - 2])
+#min 6-motorniki
+mycursor.execute("SELECT min FROM s_motor where id=6")
+pastki_sath6 = str(mycursor.fetchone())
+pastki_sath6 = float(pastki_sath6[1:len(pastki_sath6) - 2])
+print(pastki_sath6)
 global sensr
 sensr = 0
-global onoff1,onoff2,onoff3,res
+global onoff1,onoff2,onoff3, onoff4,onoff5,onoff6,res
 res=300
+sensor1a = '210'
+sensor2a = '250'
+sensor3a = '200'
+sensor4a = '210'
+sensor5a = '250'
+sensor6a = '200'
 if sensr == 1:
     onoff1 = 0
     onoff2 = 0
     onoff3 = 0
-    client1 = minimalmodbus.Instrument(comport, 1)  # port name, slave address (in decimal)
-    client1.serial.baudrate = 9600
-    # baudrate
-    client1.serial.bytesize = 8
-    client1.serial.parity = serial.PARITY_NONE
-    client1.serial.stopbits = 1
-    client1.serial.timeout = 2  # seconds
-    client1.address = 1  # Motor qo'shish  uchun Xiva
+    onoff4 = 0
+    onoff5 = 0
+    onoff6 = 0
 
-    client2 = minimalmodbus.Instrument(comport, 1)  # port name, slave address (in decimal)
-    client2.serial.baudrate = 9600
-    # baudrate
-    client2.serial.bytesize = 8
-    client2.serial.parity = serial.PARITY_NONE
-    client2.serial.stopbits = 1
-    client2.serial.timeout = 2  # seconds
-    client2.address = 4  # Motor datchiklar 4, 3, 2   uchun Xiva
+    # client2 = minimalmodbus.Instrument(comport, 1)  # port name, slave address (in decimal)
+    # client2.serial.baudrate = 9600
+    # # baudrate
+    # client2.serial.bytesize = 8
+    # client2.serial.parity = serial.PARITY_NONE
+    # client2.serial.stopbits = 1
+    # client2.serial.timeout = 2  # seconds
+    # client2.address = 4  # Motor datchiklar 4, 3, 2   uchun Xiva
+    #
 
-    client3 = minimalmodbus.Instrument(comport, 1)  # port name, slave address (in decimal)
-    client3.serial.baudrate = 9600
+    motorKalit1 = minimalmodbus.Instrument(comport, 1)  # port name, slave address (in decimal)
+    motorKalit1.serial.baudrate = 9600
     # baudrate
-    client3.serial.bytesize = 8
-    client3.serial.parity = serial.PARITY_NONE
-    client3.serial.stopbits = 1
-    client3.serial.timeout = 2  # seconds
-    client3.address = 3
+    motorKalit1.serial.bytesize = 8
+    motorKalit1.serial.parity = serial.PARITY_NONE
+    motorKalit1.serial.stopbits = 1
+    motorKalit1.serial.timeout = 2  # seconds
+    motorKalit1.address = 1  # Motor qo'shish  uchun Xiva
 
-    client4 = minimalmodbus.Instrument(comport, 1)  # port name, slave address (in decimal)
-    client4.serial.baudrate = 9600
+    motorKalit2 = minimalmodbus.Instrument(comport, 1)  # port name, slave address (in decimal)
+    motorKalit2.serial.baudrate = 9600
     # baudrate
-    client4.serial.bytesize = 8
-    client4.serial.parity = serial.PARITY_NONE
-    client4.serial.stopbits = 1
-    client4.serial.timeout = 2  # seconds
-    client4.address = 2  # input yozilgandan kelgani
+    motorKalit2.serial.bytesize = 8
+    motorKalit2.serial.parity = serial.PARITY_NONE
+    motorKalit2.serial.stopbits = 1
+    motorKalit2.serial.timeout = 2  # seconds
+    motorKalit2.address = 2  # Motor datchiklar 4, 3, 2   uchun Xiva
 
-    client5 = minimalmodbus.Instrument(comport, 1)  # port name, slave address (in decimal)
-    client5.serial.baudrate = 9600
+    motorsensor1 = minimalmodbus.Instrument(comport, 1)  # port name, slave address (in decimal)
+    motorsensor1.serial.baudrate = 9600
     # baudrate
-    client5.serial.bytesize = 8
-    client5.serial.parity = serial.PARITY_NONE
-    client5.serial.stopbits = 1
-    client5.serial.timeout = 2  # seconds
-    client5.address = 5  # sensor 5, 6, 7  uchun Xiva
+    motorsensor1.serial.bytesize = 8
+    motorsensor1.serial.parity = serial.PARITY_NONE
+    motorsensor1.serial.stopbits = 1
+    motorsensor1.serial.timeout = 2  # seconds
+    motorsensor1.address = 3
+    motorsensor1.mode = minimalmodbus.MODE_RTU
 
-    client6 = minimalmodbus.Instrument(comport, 1)  # port name, slave address (in decimal)
-    client6.serial.baudrate = 9600
+    motorsensor2 = minimalmodbus.Instrument(comport, 1)  # port name, slave address (in decimal)
+    motorsensor2.serial.baudrate = 9600
     # baudrate
-    client6.serial.bytesize = 8
-    client6.serial.parity = serial.PARITY_NONE
-    client6.serial.stopbits = 1
-    client6.serial.timeout = 2  # seconds
-    client6.address = 6
+    motorsensor2.serial.bytesize = 8
+    motorsensor2.serial.parity = serial.PARITY_NONE
+    motorsensor2.serial.stopbits = 1
+    motorsensor2.serial.timeout = 2  # seconds
+    motorsensor2.address = 4  # input yozilgandan kelgani
+    motorsensor2.mode = minimalmodbus.MODE_RTU
 
-    client7 = minimalmodbus.Instrument(comport, 1)  # port name, slave address (in decimal)
-    client7.serial.baudrate = 9600
+    motorsensor3 = minimalmodbus.Instrument(comport, 1)  # port name, slave address (in decimal)
+    motorKalit1.serial.baudrate = 9600
     # baudrate
-    client7.serial.bytesize = 8
-    client7.serial.parity = serial.PARITY_NONE
-    client7.serial.stopbits = 1
-    client7.serial.timeout = 2
+    motorsensor3.serial.bytesize = 8
+    motorsensor3.serial.parity = serial.PARITY_NONE
+    motorsensor3.serial.stopbits = 1
+    motorsensor3.serial.timeout = 2  # seconds
+    motorsensor3.address = 5  # sensor 5, 6, 7  uchun Xiva
+    motorsensor3.mode = minimalmodbus.MODE_RTU
 
-    # seconds
-    client7.address = 7
+    motorsensor4 = minimalmodbus.Instrument(comport, 1)  # port name, slave address (in decimal)
+    motorKalit1.serial.baudrate = 9600
+    # baudrate
+    motorsensor4.serial.bytesize = 8
+    motorsensor4.serial.parity = serial.PARITY_NONE
+    motorsensor4.serial.stopbits = 1
+    motorsensor4.serial.timeout = 2  # seconds
+    motorsensor4.address = 6
+    motorsensor4.mode = minimalmodbus.MODE_RTU
+
+    motorsensor5 = minimalmodbus.Instrument(comport, 1)  # port name, slave address (in decimal)
+    motorsensor5.serial.baudrate = 9600
+    # baudrate
+    motorsensor5.serial.bytesize = 8
+    motorsensor5.serial.parity = serial.PARITY_NONE
+    motorsensor5.serial.stopbits = 1
+    motorsensor5.serial.timeout = 2
+    motorsensor5.address = 7
+    motorsensor5.mode = minimalmodbus.MODE_RTU
+
+    motorsensor6 = minimalmodbus.Instrument(comport, 1)  # port name, slave address (in decimal)
+    motorsensor6.serial.baudrate = 9600
+    # baudrate
+    motorsensor6.serial.bytesize = 8
+    motorsensor6.serial.parity = serial.PARITY_NONE
+    motorsensor6.serial.stopbits = 1
+    motorsensor6.serial.timeout = 2
+    motorsensor6.address = 8
+    motorsensor6.mode = minimalmodbus.MODE_RTU
+
+    watersensor1 = minimalmodbus.Instrument(comport, 1)  # port name, slave address (in decimal)
+    watersensor1.serial.baudrate = 9600
+    # baudrate
+    watersensor1.serial.bytesize = 8
+    watersensor1.serial.parity = serial.PARITY_NONE
+    watersensor1.serial.stopbits = 1
+    watersensor1.serial.timeout = 2
+    watersensor1.address = 9
+    watersensor1.mode = minimalmodbus.MODE_RTU
+
+    watersensor2 = minimalmodbus.Instrument(comport, 1)  # port name, slave address (in decimal)
+    watersensor2.serial.baudrate = 9600
+    # baudrate
+    watersensor2.serial.bytesize = 8
+    watersensor2.serial.parity = serial.PARITY_NONE
+    watersensor2.serial.stopbits = 1
+    watersensor2.serial.timeout = 2
+    watersensor2.address = 10
+    watersensor2.mode = minimalmodbus.MODE_RTU
+
+    watersensor3 = minimalmodbus.Instrument(comport, 1)  # port name, slave address (in decimal)
+    watersensor3.serial.baudrate = 9600
+    # baudrate
+    watersensor3.serial.bytesize = 8
+    watersensor3.serial.parity = serial.PARITY_NONE
+    watersensor3.serial.stopbits = 1
+    watersensor3.serial.timeout = 2
+    watersensor3.address = 11
+    watersensor3.mode = minimalmodbus.MODE_RTU
+
 else:
     onoff1 = 10 # simulyator
     onoff2 = 10
     onoff3 = 10
 
+
 # this is the slave address number
 # client1.mode = minimalmodbus.MODE_RTU # rtu or ascii mode
-sensor1a = '1100'
-sensor2a = '1500'
-sensor3a = '2000'
+
 
 
 
@@ -191,15 +269,16 @@ def on1():
         if res == None:
             return
         if sensr != 0:
-            onoff1 = 1
-            client1.write_register(2, 0x0200)
-            client1.write_register(1, 0x0100)
+            try:
+                onoff1 = 1
+                motorKalit1.write_register(2, 0x0200)
+                motorKalit1.write_register(1, 0x0100)
+            except:
+                pyautogui.alert(text="signal yo'q qayta urinib ko'ring")
 
         else:
-            onoff1 = 11
 
-
-        onoff1=11
+          return
     else:
         pyautogui.alert(text="Motor ishlayapti to'xtashini kuting")
         return
@@ -208,27 +287,23 @@ def on1():
     mycursor.execute(sensorSql, valSensor)
     mydb.commit()
 
-
-
     labOldsensor1 = float(labelsensor1.cget("text"))
     labelOldsensor1 = Label(secondWindow,text=str(labOldsensor1), bg="grey",fg="white",  width=7,font=('italic', 16, 'bold'))
     labelOldsensor1.grid(row=3, column=4)
     sath1.configure(text=str(res))
-
-
-
-
 def on2():
     global onoff1
     if onoff1 != 12:
-
         res2 = pyautogui.password(text='Sm da oraliqni kiriting', title='Oraliq masofa', default='', mask='')
         if res2 == None:
             return
         if sensr != 0:
-            onoff1 = 1
-            client1.write_register(1, 0x0200)
-            client1.write_register(2, 0x0100)
+            try:
+                onoff1 = 1
+                motorKalit1.write_register(1, 0x0200)
+                motorKalit1.write_register(2, 0x0100)
+            except:
+                pyautogui.alert(text="signal yo'q qayta urinib ko'ring")
 
         else:
             onoff1 = 12
@@ -245,7 +320,6 @@ def on2():
     labelOldsensor1 = Label(secondWindow, text=str(labOldsensor1), bg="grey", fg="white",  width=7,font=('italic', 16, 'bold'))
     labelOldsensor1.grid(row=3, column=4)
     sath1.configure(text=str(res2))
-
 def on3():
     global onoff2
     if onoff2 != 11:
@@ -254,9 +328,12 @@ def on3():
         if 21 == None:
             return
         if sensr != 0:
-            onoff2 = 1
-            client1.write_register(4, 0x0200)
-            client1.write_register(3, 0x0100)
+            try:
+                onoff2 = 1
+                motorKalit1.write_register(4, 0x0200)
+                motorKalit1.write_register(3, 0x0100)
+            except:
+             pyautogui.alert(text="signal yo'q qayta urinib ko'ring")
 
         else:
             onoff2 = 11
@@ -279,9 +356,13 @@ def on4():
         if 22 == None:
             return
         if sensr != 0:
-            onoff2 = 1
-            client1.write_register(3, 0x0200)
-            client1.write_register(4, 0x0100)
+            try:
+
+                onoff2 = 1
+                motorKalit1.write_register(3, 0x0200)
+                motorKalit1.write_register(4, 0x0100)
+            except:
+                pyautogui.alert(text="signal yo'q qayta urinib ko'ring")
 
         else:
             onoff2 = 12
@@ -303,9 +384,12 @@ def on5():
         if 31 == None:
             return
         if sensr != 0:
-            onoff3 = 1
-            client1.write_register(6, 0x0200)
-            client1.write_register(5, 0x0100)
+            try:
+                onoff3 = 1
+                motorKalit1.write_register(6, 0x0200)
+                motorKalit1.write_register(5, 0x0100)
+            except:
+                  pyautogui.alert(text="signal yo'q qayta urinib ko'ring")
 
         else:
             onoff3 = 11
@@ -327,16 +411,20 @@ def on6():
         if 32 == None:
             return
         if sensr != 0:
-            onoff3 = 2
-            client1.write_register(3, 0x0200)
-            client1.write_register(4, 0x0100)
+
+            try:
+                onoff3 = 2
+                motorKalit1.write_register(6, 0x0200)
+                motorKalit1.write_register(5, 0x0100)
+            except:
+                pyautogui.alert(text="Signal bo'lmadi qayta urinib ko'ring",title='ogohlantirish',bg='yellow')
 
         else:
             onoff3 = 12
 
         onoff3 = 12
     else:
-        pyautogui.alert(text="Motor ishlayapti to'xtashini kuting")
+        pyautogui.alert(text="Motor ishlayapti to'xtashini kuting",title='ogohlantirish')
         return
 
     labOldsensor3 = float(labelsensor3.cget("text"))
@@ -344,120 +432,134 @@ def on6():
     labelOldsensor3.grid(row=5, column=4)
     sath3.configure(text=str(res32))
 
+
+
 def motor_sensor():
-    global sensor1a,sensor2a,sensor3a,onoff1,onoff2,onoff3,res
+    global sensor1a,sensor2a,sensor3a,sensor4a,sensor5a,sensor6a,onoff1,onoff2,onoff3,onoff4,onoff5,onoff6,res
     if sensr == 1:
         try:
-         sensor1a = str(client2.read_register(1, 0, 3))
+         sensor1a = str(motorsensor1.read_register(1, 0, 3))
+         labelsensor1.configure(bg='white', fg="black")
         except:
-            sensorXatoSql = "INSERT INTO xatosensor(motor_id,status)VALUES (%s,%s)"
+            sensorXatoSql = "INSERT INTO xato_sensor(motor_id,status)VALUES (%s,%s)"
             valSensorxato = (1, 'Sensor ishlamadi')
             mycursor.execute(sensorXatoSql, valSensorxato)
+            sensor1a=labelsensor1.cget('text')
+            labelsensor1.configure(bg='black',fg="white")
 
-            print('d')
-    else:
-        if onoff1 == 11:
-            sensor1a = str(float(sensor1a) -200)
-            print(sensor1a)
-            if (float(sensor1a) < 0):
-                sensor1a ='0'
-                onoff1=10
-        if onoff1 == 12:
-             sensor1a = str(float(sensor1a) +200)
-    sensor1 = round(pastki_sath1 - (float(float(sensor1a[0:len(sensor1a) ]) / 1000)), 2)
+     #Sensor2
+            try:
+                sensor2a = str(motorsensor2.read_register(1, 0, 3))
+                labelsensor2.configure(bg='white', fg="black")
+            except:
+                print('d')
+                sensorXatoSql2 = "INSERT INTO xato_sensor(motor_id,status)VALUES (%s,%s)"
+                valSensorxato2 = (2, 'Sensor ishlamadi')
+                mycursor.execute(sensorXatoSql2, valSensorxato2)
+                sensor2a = labelsensor2.cget('text')
+                labelsensor2.configure(bg='black', fg="white")
+    #sensor3
+            try:
+                sensor3a = str(motorsensor3.read_register(1, 0, 3))
+                labelsensor3.configure(bg='white', fg="black")
+            except:
+                sensorXatoSql3 = "INSERT INTO xato_sensor(motor_id,status)VALUES (%s,%s)"
+                valSensorxato3 = (3, 'Sensor ishlamadi')
+                mycursor.execute(sensorXatoSql3, valSensorxato3)
+                sensor3a = labelsensor3.cget('text')
+                labelsensor3.configure(bg='black', fg="white")
 
+
+        #sensor3
+
+    sensor1 = round(pastki_sath1 - (float(float(sensor1a) / 100)), 2)
+    sensor2 = round(pastki_sath2 - (float(float(sensor2a) / 100)), 2)
+    sensor3 = round(pastki_sath3 - (float(float(sensor3a) / 100)), 2)
+
+
+    #tekshirish sensor1
     if sensor1 > float(pastki_sath1 - 0.2):
         if sensr != 0:
-            onoff1 = 0
-            client1.write_register(1, 0x0200)
+            try:
+                onoff1 = 0
+                motorKalit1.write_register(1, 0x0200)
+            except:
+                print(" aaa")
+                # pyautogui.alert(text="signal yo'q qayta urinib ko'ring")
         else:
             onoff1 = 10
             sensor1 = pastki_sath1
 
         if sensor1 < 0.1:
          if sensr != 0:
-            client1.write_register(2, 0x0200)
-            onoff1 = 0
+             try:
+                motorKalit1.write_register(2, 0x0200)
+                onoff1 = 0
+             except:
+                 print(" aaa"  )#pyautogui.alert(text="signal yo'q qayta urinib ko'ring")
+
          else:
             onoff1 = 10
     if (float(sensor1a)>pastki_sath1*1000):
         onoff1=10
         sensor1="0"
     print(onoff1)
-    labelsensor1.configure(text=sensor1)
-  # Sensor2
-    if sensr == 1:
-        try:
-            sensor2a = str(client2.read_register(2, 0, 3))
-        except:
-            print('d')
-            sensorXatoSql2 = "INSERT INTO xatosensor(motor_id,status)VALUES (%s,%s)"
-            valSensorxato2 = (2, 'Sensor ishlamadi')
-            mycursor.execute(sensorXatoSql2, valSensorxato2)
-    else:
-        if onoff2 == 11:
-            sensor2a = str(float(sensor2a) - 200)
-            print(sensor2a)
-            if (float(sensor2a) < 0):
-                sensor2a = '0'
-        if onoff2 == 12:
-            sensor2a = str(float(sensor2a) + 200)
-    sensor2 = round(pastki_sath2 - (float(float(sensor2a[0:len(sensor2a)]) / 1000)), 2)
-
+    #sensor2
     if sensor2 > float(pastki_sath2 - 0.2):
         if sensr != 0:
-            onoff2 = 0
-            client1.write_register(3, 0x0200)
+            try:
+                onoff2 = 0
+                motorKalit1.write_register(3, 0x0200)
+            except:
+               print(" aaa"  )# pyautogui.alert(text="signal yo'q qayta urinib ko'ring")
         else:
             onoff1 = 10
             sensor2 = pastki_sath2
         if sensor2 < 0.1:
             if sensr != 0:
-                client1.write_register(4, 0x0200)
-                onoff2 = 0
+                try:
+                    motorKalit1.write_register(4, 0x0200)
+                    onoff2 = 0
+                except:
+                    # pyautogui.alert(text="signal yo'q qayta urinib ko'ring")
+                    print(" aaa")
             else:
                 onoff2 = 10
     if (float(sensor2a) > pastki_sath2 * 1000):
         onoff1 = 10
         sensor2 = "0"
-    print(onoff1)
-    labelsensor2.configure(text=sensor2)
-    # sensor3
-    if sensr == 1:
-        try:
-            sensor3a = str(client2.read_register(3, 0, 3))
-        except:
-            sensor3a=str(client2.read_register(3, 0, 3))
-            sensorXatoSql3 = "INSERT INTO xatosensor(motor_id,status)VALUES (%s,%s)"
-            valSensorxato3 = (3, 'Sensor ishlamadi')
-            mycursor.execute(sensorXatoSql3, valSensorxato3)
-    else:
-        if onoff3 == 11:
-            sensor3a = str(float(sensor3a) - 200)
-            print(sensor3a)
-            if (float(sensor3a) < 0):
-                sensor3a = '0'
-        if onoff3 == 12:
-            sensor3a = str(float(sensor3a) + 200)
-    sensor3 = round(pastki_sath3 - (float(float(sensor3a[0:len(sensor3a)]) / 1000)), 2)
 
-    if sensor3 > float(pastki_sath3 - 0.2):
+    #sensor3
+    if sensor3 > float(pastki_sath3 - 0.2) :
         if sensr != 0:
             onoff3 = 0
-            client1.write_register(5, 0x0200)
+            try:
+                motorKalit1.write_register(5, 0x0200)
+            except:
+                # pyautogui.alert(text="signal yo'q qayta urinib ko'ring")
+              print(" aaa"  )
         else:
             onoff3 = 10
             sensor3 = pastki_sath3
 
     if (float(sensor3a) > pastki_sath3 * 1000):
         if sensr != 0:
-            client1.write_register(6, 0x0200)
-            onoff1 = 0
+            try:
+
+                motorKalit1.write_register(6, 0x0200)
+                onoff1 = 0
+            except:
+                #pyautogui.alert(text="signal yo'q qayta urinib ko'ring")
+                print(" aaa")
         else:
             onoff1 = 10
             sensor3 = "0"
-    labelsensor3.configure(text=sensor3)
 
+
+
+    labelsensor1.configure(text=sensor1)
+    labelsensor2.configure(text=sensor2)
+    labelsensor3.configure(text=sensor3)
     # 1-motorning sensorindagi malumoti yozish
     sensorSql1 = "INSERT INTO motor_sensor(asos_id,motor_id,user_id,cm)VALUES (%s,%s,%s,%s)"
     valSensor1 = (1, 1, 1, sensor1)
@@ -486,33 +588,45 @@ def off1():
         return
     global onoff1
     if sensr != 0:
-        client1.write_register(1, 0x0200)
-        client1.write_register(2, 0x0200)
-        onoff1 = 0
+        try:
+            motorKalit1.write_register(1, 0x0200)
+            motorKalit1.write_register(2, 0x0200)
+            onoff1 = 0
+        except:
+            pyautogui.alert(text="signal yo'q qayta urinib ko'ring")
     else:
         onoff1 = 10
     print(onoff1)
 def off2():
-    res = pyautogui.confirm(text='', title='1 - motor harakatini to`xtotasizmi() ?', buttons=['OK', 'Cancel'])
+    res = pyautogui.confirm(text='', title='2 - motor harakatini to`xtotasizmi() ?', buttons=['OK', 'Cancel'])
     if res == 'Cancel':
         return
     if sensr != 0:
-        client1.write_register(3, 0x0200)
-        client1.write_register(4, 0x0200)
+        try:
+            motorKalit1.write_register(3, 0x0200)
+            motorKalit1.write_register(4, 0x0200)
+            onoff2=0
+        except:
+            pyautogui.alert(text="signal yo'q qayta urinib ko'ring")
     else:
      onoff2 = 10
     print(onoff2)
 
 def off3():
-    res = pyautogui.confirm(text='', title='1 - motor harakatini to`xtotasizmi() ?', buttons=['OK', 'Cancel'])
+    res = pyautogui.confirm(text='STOP', title='3 - motor harakatini to`xtotasizmi ?', buttons=['OK', 'Cancel'])
     if res == 'Cancel':
         return
     if sensr != 0:
-        client1.write_register(5, 0x0200)
-        client1.write_register(6, 0x0200)
+        try:
+            motorKalit1.write_register(5, 0x0200)
+            motorKalit1.write_register(6, 0x0200)
+            onoff3=0
+        except:
+            pyautogui.alert(text="signal yo'q qayta urinib ko'ring")
     else:
         onoff3 = 10
     print(onoff3)
+
 
 def water_sensor():
     farq= "Select farq_sm from s_farq where sensor_id=1 order by id desc limit 1"
@@ -541,10 +655,18 @@ def water_sensor():
     totalHeight = float(reyka_height[1:len(reyka_height) - 2]) + float(water_height[1:len(water_height) - 2])
 
     if sensr != 0:
-        sensor5a = str(client5.read_register(1, 0, 3))
+        try:
+         sensor5b = str(watersensor1.read_register(1, 0, 3))
+        except:
+            sensorXatoSql5 = "INSERT INTO xato_sensor(motor_id,status)VALUES (%s,%s)"
+            valSensorxato5 = (7, 'Sensor ishlamadi')
+            mycursor.execute(sensorXatoSql5, valSensorxato5)
+            sensor5b=labelIN.cget('text')
+            sath1.configure(bg='black',fg="white")
+
     else:
-        sensor5a = '2000'
-    sensor5 = round(float(totalHeight) - float(int(sensor5a[0:len(sensor5a) - 1]) / 100), 2)
+        sensor5b = '2000'
+    sensor5 = round(float(totalHeight) - float(int(sensor5b[0:len(sensor5b) - 1]) / 100), 2)
     labelIN.configure(text=sensor5)
 
     cub = " Select kub from suvhajmi where sensor_id=1"   ###
@@ -575,11 +697,19 @@ def water_sensor():
     totalHeight = float(reyka_height[1:len(reyka_height) - 2]) + float(water_height[1:len(water_height) - 2])
 
     if sensr != 0:
-        sensor6a = str(client6.read_register(1, 0, 3))
-    else:
-        sensor6a = '2000'
+        try:
+         sensor6b = str(watersensor2.read_register(1, 0, 3))
+        except:
+            sensorXatoSql6 = "INSERT INTO xato_sensor(motor_id,status)VALUES (%s,%s)"
+            valSensorxato6 = (8, 'Sensor ishlamadi')
+            mycursor.execute(sensorXatoSql6, valSensorxato6)
+            sensor6b=labelOut1.cget('text')
+            labelOut1.configure(bg='black',fg="white")
 
-    sensor6 = round(totalHeight - float(int(sensor6a[0:len(sensor6a) - 1]) / 100), 2)
+    else:
+        sensor6b = '2000'
+
+    sensor6 = round(totalHeight - float(int(sensor6b[0:len(sensor6b) - 1]) / 100), 2)
     # #Cubini hisoblash
     cub = " Select kub from suvhajmi where sensor_id=1 "    # jadval berilishi kerak  sensor_id=2
     mycursor.execute(cub)
@@ -606,10 +736,17 @@ def water_sensor():
     water_height = str(mycursor.fetchone())
     totalHeight = float(reyka_height[1:len(reyka_height) - 2]) + float(water_height[1:len(water_height) - 2])
     if sensr != 0:
-        sensor7a = str(client7.read_register(1, 0, 3))
+        try:
+         sensor7b = str(watersensor3.read_register(1, 0, 3))
+        except:
+            sensorXatoSql = "INSERT INTO xato_sensor(motor_id,status)VALUES (%s,%s)"
+            valSensorxato = (7, 'Sensor ishlamadi')
+            mycursor.execute(sensorXatoSql, valSensorxato)
+            sensor7b=labelOut2.cget('text')
+            labelOut2.configure(bg='black',fg="white")
     else:
-        sensor7a = '2000'
-    sensor7 = round(totalHeight - float(int(sensor7a[0:len(sensor7a) - 1]) / 100), 2)
+        sensor7b = '2000'
+    sensor7 = round(totalHeight - float(int(sensor7b[0:len(sensor7b) - 1]) / 100), 2)
     cub = " Select kub from suvhajmi where sensor_id=1 "  # jadval berilishi kerak  sensor_id=3
 
 
@@ -633,9 +770,8 @@ window = Tk()
 newWindow=ttk.Notebook(window)
 firstWindow=Frame(newWindow,bg="Khaki")
 secondWindow=Frame(newWindow)
-newWindow.add(firstWindow,text="Settings")
 newWindow.add(secondWindow,text="user")
-
+newWindow.add(firstWindow,text="Settings")
 
 newWindow.pack(expand=True,fill="both")
 window.title('SUV INSHOATI NAZORATI')
@@ -704,17 +840,67 @@ button32 = Button(secondWindow, width=5, text='stop', command=off3, fg='white', 
     row=5, column=6, padx=1, pady=6)
 button33 = Button(secondWindow, width=5, text='pastga', command=on6, fg='black', bg='yellow',
                   font=('italic', 14, 'bold')).grid(row=5, column=7, padx=1, pady=6)
+#
+#
+# label4 = Label(secondWindow,text='4', fg='yellow', bg='blue', width=2, font=('italic', 20, 'bold'))
+# label4.grid(row=6, column=1, padx=3,pady=6)
+#
+# labelsensor4 = Label(secondWindow,font=('Arial', 20), bg='white', fg='blue', width=5, bd=2,relief=SUNKEN)
+# labelsensor4.grid(row=6, column=2)
+#
+# sath4 = Label(secondWindow,font=('Arial', 20),text='', bg='white', fg='blue', width=5, bd=2, relief=SUNKEN)
+# sath4.grid(row=6, column=3,padx=0)
+# button41 = Button(secondWindow, width=5, command=on7, text='tepaga', fg='white', bg='green',
+#                   font=('italic', 14, 'bold')).grid(row=6, column=5, padx=1, pady=6)
+# button42 = Button(secondWindow, width=5, command=off4, text='stop', fg='white', bg='red', font=('italic', 14, 'bold')).grid(
+#     row=6, column=6, padx=3, pady=6)
+# button43 = Button(secondWindow, width=5, command=on8, text='pastga', fg='black', bg='yellow',
+#                   font=('italic', 14, 'bold')).grid(row=6, column=7, padx=1, pady=6)
+#
+# label5 = Label(secondWindow,text='5', fg='yellow', bg='blue', width=5, font=('italic', 14, 'bold')).grid(row=7, column=1, padx=1,
+#                                                                                              pady=6)
+# labelsensor5 = Label(secondWindow,font=('Arial', 20), bg='white', fg='black', width=5, bd=2,
+#                      relief=SUNKEN)
+# labelsensor5.grid(row=7, column=2)
+# sath5 = Label(secondWindow,font=('Arial', 20), text='',bg='white', fg='blue', width=5, bd=2,
+#               relief=SUNKEN)
+# sath5.grid(row=7, column=3)
+# button51 = Button(secondWindow, width=5, command=on9, text='tepaga', fg='white', bg='green',
+#                   font=('italic', 14, 'bold')).grid(row=7, column=5, padx=1, pady=3)
+# button52 = Button(secondWindow,width=5, command=off5, text='stop', fg='white', bg='red', font=('italic', 14, 'bold')).grid(
+#     row=7, column=6, padx=3, pady=6)
+# button53 = Button(secondWindow, width=5, command=on10, text='pastga', fg='black', bg='yellow',
+#                   font=('italic', 14, 'bold')).grid(row=7, column=7, padx=1, pady=6)
+#
+# label6 = Label(secondWindow,text='6', fg='yellow', bg='blue', width=2, font=('italic', 20, 'bold')).grid(row=8, column=1, padx=1,
+#                                                                                              pady=6)
+# labelsensor6 = Label(secondWindow,font=('Arial', 20), text=' ', bg='white', fg='blue', width=5, bd=2,
+#                      relief=SUNKEN)
+# labelsensor6.grid(row=8, column=2)
+# sath6 = Label(secondWindow,font=('Arial', 20), text='',bg='white', fg='blue', width=5, bd=2,
+#               relief=SUNKEN)
+# sath6.grid(row=8, column=3)
+# button61 = Button(secondWindow, width=5, text='tepaga', command=on11, fg='white', bg='green',
+#                   font=('italic', 14, 'bold')).grid(row=8, column=5, padx=1, pady=6)
+# button62 = Button(secondWindow, width=5, text='stop', command=off6, fg='white', bg='red', font=('italic', 14, 'bold')).grid(
+#     row=8, column=6, padx=1, pady=6)
+# button63 = Button(secondWindow, width=5, text='pastga', command=on12, fg='black', bg='yellow',
+#                   font=('italic', 14, 'bold')).grid(row=8, column=7, padx=1, pady=6)
+#
+
+
+
 inWater=Label(secondWindow,font=('Arial', 16), text='suv sathi', bg='white', fg='blue', width=8, bd=2,
                      relief=SUNKEN)
-inWater.grid(row=6, column=2, padx=1, pady=6)
+inWater.grid(row=12, column=2, padx=1, pady=6)
 inWaterCub=Label(secondWindow,font=('Arial', 16), text='suv hajmi', bg='white', fg='blue', width=8, bd=2,
                      relief=SUNKEN)
-inWaterCub.grid(row=6, column=3, padx=2, pady=6)
-labelInZey = Label(secondWindow,text='zey-yop', fg='white', bg='blue', width=7, font=('italic', 16, 'bold')).grid(row=10, column=1,
+inWaterCub.grid(row=12, column=3, padx=2, pady=6)
+labelInZey = Label(secondWindow,text='IN', fg='white', bg='blue', width=7, font=('italic', 16, 'bold')).grid(row=10, column=1,
                                                                                                     padx=1, pady=6)
-labelOutPlovon = Label(secondWindow,text='polvon', fg='white', bg='blue', width=7, font=('italic', 16, 'bold')).grid(row=11, column=1,
+labelOutPlovon = Label(secondWindow,text='Out1', fg='white', bg='blue', width=7, font=('italic', 16, 'bold')).grid(row=11, column=1,
                                                                                                     padx=1, pady=6)
-labelOutPut2 = Label(secondWindow,text='zey pastki  ', fg='white', bg='blue', width=10, font=('italic', 12, 'bold')).grid(row=12,
+labelOutPut2 = Label(secondWindow,text='Out2  ', fg='white', bg='blue', width=10, font=('italic', 12, 'bold')).grid(row=12,
                                                                                                                column=1,
                                                                                                                padx=3,
                                                                                                                pady=6)
