@@ -18,7 +18,7 @@ from datetime import timedelta
 
 global sensr
 sensr = 0
-global onoff1, onoff2, onoff3, onoff4, onoff5, onoff6, onoff7, onoff8, res, \
+global onoff1, onoff2, onoff3, onoff4, onoff5, onoff6, onoff7, onoff8, work_protsent1,work_protsent2,work_protsent3, \
     mtakror1, wtakror1, \
     mtakror2, wtakror2, \
     mtakror3, wtakror3
@@ -26,14 +26,15 @@ global onoff1, onoff2, onoff3, onoff4, onoff5, onoff6, onoff7, onoff8, res, \
 mtakror1 = 1
 mtakror2 = 1
 mtakror3 = 1
-
+work_protsent1=0
+work_protsent2=0
 wtakror1 = 1
 wtakror2 = 1
 wtakror3 = 1
 global motorSensor1,mfoiz2,mfoiz3,mfoiz1 ,oraliq1, oraliq2, oraliq3, labOldmotorSensor1, \
     labOldmotorSensor2, labOldmotorSensor3, motorSensor2, motorSensor3, \
     motorSensor2a, motorSensor1a, motorSensor3a,label
-motorSensor1a = '1110'
+motorSensor1a = '1150'
 motorSensor2a = '1150'
 motorSensor3a = '1100'
 oraliq1 = 0.0
@@ -42,9 +43,9 @@ oraliq3 = 0.0
 mfoiz2=0
 mfoiz3=0
 mfoiz1=0
-labOldmotorSensor1 = 110.0
-labOldmotorSensor2 = 150
-labOldmotorSensor3 = 200
+labOldmotorSensor1 = 0
+labOldmotorSensor2 = 0
+labOldmotorSensor3 = 0
 
 motorSensor1 = 0
 motorSensor2 = 0
@@ -253,16 +254,14 @@ def ogoh():
     w_lbl_in_cub.after(15000, ogoh)
 
 
-
 def on1():
-    global onoff1, labOldmotorSensor1, oraliq1
+    global onoff1, labOldmotorSensor1, oraliq1,work_protsent1
     labOldmotorSensor1 = float(m_sensor_lbl_input_1.cget("text"))
     if onoff1 != 11:
         res11 = pyautogui.password(text='Sm da oraliqni kiriting', title='Oraliq masofa', default='', mask='')
         try:
             oraliq1 = float(int(res11) / 100)
             # pastki_sath1 - max1=1.45
-            print(onoff1)
             if(sensr==0):
               onoff1=11
             elif(sensr==1):
@@ -296,11 +295,21 @@ def on1():
         pyautogui.alert(text="motor ishlayapti to'xtashini kuting")
         return
 
+    def step():
 
+         secondWindow.update_idletasks()
+         pb1['value'] = (motorSensor1-labOldmotorSensor1)/oraliq1
+
+    pb1 = Progressbar(secondWindow, orient=HORIZONTAL, length=100)
+    pb1.grid(row=2, column=1)
+    # a=Button(ws,text="aaaa",command=step)
+    # a.grid(row=3,column=3)
+
+    step()
 
 
 def on3():
-    global onoff2, labOldmotorSensor2, oraliq2
+    global onoff2, labOldmotorSensor2, oraliq2,work_protsent2
     labOldmotorSensor2 = float(m_sensor_lbl_input_2.cget("text"))
     if onoff2 != 11:
         res21 = pyautogui.password(text='Sm da oraliqni kiriting', title='Oraliq masofa', default='', mask='')
@@ -312,7 +321,6 @@ def on3():
                 onoff2 = 1
             if (oraliq2 + labOldmotorSensor2 > pastki_sath2 - max2):
                 pyautogui.alert(text="Siz kiritgan son meyordan ortiqcha ")
-                print(onoff2)
                 if (sensr == 0):
                     onoff2 = 10
                 elif (sensr == 1):
@@ -355,7 +363,6 @@ def on5():
                 onoff3 = 1
             if (oraliq3 + labOldmotorSensor3 > pastki_sath3 - max3):
                 pyautogui.alert(text="Siz kiritgan son meyordan ortiqcha ")
-                print(onoff3)
                 if (sensr == 0):
                     onoff3 = 10
                 elif (sensr == 1):
@@ -385,7 +392,7 @@ def on5():
         pyautogui.alert(text="motor ishlayapti to'xtashini kuting")
         return
 def on2():
-    global onoff1, labOldmotorSensor1, oraliq1
+    global onoff1, labOldmotorSensor1, oraliq1,work_protsent1
 
     labOldmotorSensor1 = float(m_sensor_lbl_input_1.cget("text"))
     if onoff1 != 12:
@@ -399,7 +406,6 @@ def on2():
                 onoff1 = 2
             if (-oraliq1 + labOldmotorSensor1 < 0):
                 pyautogui.alert(text="Siz kiritgan son meyordan ortiqcha ")
-                print(onoff1)
                 if (sensr == 0):
                     onoff1 = 10
                 elif (sensr == 1):
@@ -425,7 +431,7 @@ def on2():
         pyautogui.alert(text="motor ishlayapti to'xtashini kuting")
         return
 def on4():
-    global onoff2, labOldmotorSensor2, oraliq2
+    global onoff2, labOldmotorSensor2, oraliq2,work_protsent2
     labOldmotorSensor2 = float(m_sensor_lbl_input_2.cget("text"))
     if onoff2 != 12:
 
@@ -439,13 +445,11 @@ def on4():
                 onoff2 = 2
             if (-oraliq2 + labOldmotorSensor2 < 0):
                 pyautogui.alert(text="Siz kiritgan son meyordan ortiqcha ")
-                print(onoff2)
                 if (sensr == 0):
                     onoff2 = 10
                 elif (sensr == 1):
                     onoff2 = 0
             else:
-                labOldmotorSensor2 = float(m_sensor_lbl_input_2.cget("text"))
                 labelOldmotorSensor2 = Label(secondWindow, text=str(labOldmotorSensor2), bg="grey", fg="white", width=7,
                                              font=('italic', 16, 'bold'))
                 labelOldmotorSensor2.grid(row=4, column=5)
@@ -489,18 +493,22 @@ def on6():
                 onoff3 = 2
             if (-oraliq3 + labOldmotorSensor3 < 0):
                 pyautogui.alert(text="Siz kiritgan son meyordan ortiqcha ")
-                print(onoff3)
                 if (sensr == 0):
                     onoff3 = 10
                 elif (sensr == 1):
                     onoff3 = 0
 
             else:
-                labOldmotorSensor3 = float(m_sensor_lbl_input_3.cget("text"))
                 labelOldmotorSensor3 = Label(secondWindow, text=str(labOldmotorSensor3), bg="grey", fg="white", width=7,
                                              font=('italic', 16, 'bold'))
                 labelOldmotorSensor3.grid(row=5, column=5)
                 m_up_input3.configure(text="-"+str(res32))
+
+                # m_work_present3=round((100*(labOldmotorSensor3-motorSensor3)/oraliq3),1)
+                # m_lbl_work_present3=Label(secondWindow,text=str(m_work_present3), bg="grey", fg="white", width=7,
+                #                              font=('italic', 16, 'bold'))
+                # m_lbl_work_present3.grid(row=5, column=8)
+
         except:
             res = pyautogui.alert(text="Siz maydonni bo'sh qoldirdingiz yoki simvol kiritdiz qayta urinib ko'ring",
                                   title='Oraliq masofa', )
@@ -560,11 +568,10 @@ def motorSensor():
 
 motorSensor()
 
-print(motorSensor2)
 def motor_sensor():
     global motorSensor1a, motorSensor2a, motorSensor3a, mtakror1, mtakror2, mtakror3, \
         motorSensor1, motorSensor2, motorSensor2, motorSensor2, motorSensor3, \
-        onoff1, onoff2, onoff3, onoff4, oraliq1, oraliq2, oraliq3,mfoiz2,mfoiz3,mfoiz1
+        onoff1, onoff2, onoff3, onoff4, oraliq1, oraliq2, oraliq3,labelSensor1a
 
     if sensr == 1:
         try:
@@ -584,7 +591,6 @@ def motor_sensor():
             m_sensor_lbl_input_2.configure(bg='white', fg="black")
             labelSensor2a = m_sensor_lbl_input_2.cget('text')
         except:
-            print('d')
             motorSensorXatoSql2 = "INSERT INTO xato_sensor(motor_id,status)VALUES (%s,%s)"
             valmotorSensorxato2 = (2, 'motorSensor ishlamadi')
             mycursor.execute(motorSensorXatoSql2, valmotorSensorxato2)
@@ -629,7 +635,6 @@ def motor_sensor():
     Label(secondWindow, text=str(mfoiz3) + '%', font=('Arial', 18), bg='white', fg='blue', width=5, bd=2,
           relief=SUNKEN).grid(row=5, column=3, padx=1, pady=8)
 
-    print(motorSensor1)
     # 1-motor yuqoriga kutarilish
     if ( motorSensor1 >= oraliq1 + labOldmotorSensor1):
         if (onoff1 == 1 and sensr == 1):
@@ -651,7 +656,7 @@ def motor_sensor():
             motorKalit1.write_register(2, 0x0200)
         if ( onoff1 == 12 and sensr == 0):
             onoff1=10
-    if (motorSensor1 < 0.18):
+    if (motorSensor1 <=0.18):
         if (onoff1 == 2 and sensr == 1):
             onoff1 = 0
             motorKalit1.write_register(2, 0x0200)
@@ -678,12 +683,14 @@ def motor_sensor():
         if (onoff2 == 12 and sensr == 0):
             onoff2 = 10
 
-    if ( motorSensor2 < 0.18):
+    if ( motorSensor2 <= 0.18):
         if ( onoff2 == 2 and sensr == 1):
             onoff2 = 0
             motorKalit1.write_register(4, 0x0200)
         if ( onoff2 == 12 and sensr == 0):
             onoff2 = 10
+    print(motorSensor3)
+    print(labOldmotorSensor3)
     # 3-motor yuqoriga kutarilish
     if (motorSensor3 >= oraliq3 + labOldmotorSensor3):
         if (onoff3== 1 and sensr == 1):
@@ -716,30 +723,49 @@ def motor_sensor():
         if onoff1 == 11:
 
             motorSensor1a = str(float(motorSensor1a) - 50)
+            work_protsent1 = round(100 * (-labOldmotorSensor1 + motorSensor1) / oraliq1, 2)
+            lbl_work_protsent1 = Label(secondWindow, text=str(work_protsent1), bg="grey", fg="white", width=7,
+                                       font=('italic', 16, 'bold'))
+            lbl_work_protsent1.grid(row=3, column=8)
 
-            def step():
-                for i in range(5):
-                    secondWindow.update_idletasks()
-                    bar['value'] += 20
 
-                    time.sleep(1)
-            bar=Progressbar(secondWindow,orient=HORIZONTAL ,length=200)
-            bar.grid(row=3, column=8)
 
 
         if onoff1 == 12:
             motorSensor1a = str(float(motorSensor1a) + 50)
+            work_protsent1 = round(100 * (labOldmotorSensor1 - motorSensor1) / oraliq1, 2)
+            lbl_work_protsent1 = Label(secondWindow, text=str(work_protsent1), bg="grey", fg="white", width=7,
+                                       font=('italic', 16, 'bold'))
+            lbl_work_protsent1.grid(row=3, column=8)
 
         # motorSensor2
         if onoff2 == 11:
             motorSensor2a = str(float(motorSensor2a) - 50)
+            work_protsent2 = round(100 * (-labOldmotorSensor2 + motorSensor2) / oraliq2, 2)
+            lbl_work_protsent2 = Label(secondWindow, text=str(work_protsent2), bg="grey", fg="white", width=7,
+                                       font=('italic', 16, 'bold'))
+            lbl_work_protsent2.grid(row=4, column=8)
         if onoff2 == 12:
             motorSensor2a = str(float(motorSensor2a) + 50)
+            work_protsent2 = round(100 * (labOldmotorSensor2 - motorSensor2) / oraliq2, 2)
+            lbl_work_protsent2 = Label(secondWindow, text=str(work_protsent2), bg="grey", fg="white", width=7,
+                                       font=('italic', 16, 'bold'))
+            lbl_work_protsent2.grid(row=4, column=8)
         # motorSensor3
         if onoff3 == 11:
             motorSensor3a = str(float(motorSensor3a) - 50)
+            work_protsent3 = round(100 * (-labOldmotorSensor3 + motorSensor3) / oraliq3, 2)
+            lbl_work_protsent3 = Label(secondWindow, text=str(work_protsent3), bg="grey", fg="white", width=7,
+                                       font=('italic', 16, 'bold'))
+            lbl_work_protsent3.grid(row=5, column=8)
         if onoff3 == 12:
             motorSensor3a = str(float(motorSensor3a) + 50)
+            work_protsent3 = round(100 * ( labOldmotorSensor3- motorSensor3) / oraliq3, 2)
+            lbl_work_protsent3 = Label(secondWindow, text=str(work_protsent3), bg="grey", fg="white", width=7,
+                                       font=('italic', 16, 'bold'))
+            lbl_work_protsent3.grid(row=5, column=8)
+
+
 
     m_sensor_lbl_input_1.configure(text=motorSensor1)
     m_sensor_lbl_input_2.configure(text=motorSensor2)
@@ -803,6 +829,16 @@ def motor_sensor():
     m_sensor_lbl_input_1.after(1000, motor_sensor)
 
 
+# def step():
+#     for i in range(5):
+#         secondWindow.update_idletasks()
+#         bar['value'] += 20
+#
+#         time.sleep(1)
+#
+# bar = Progressbar( orient=HORIZONTAL, length=200)
+# bar.grid(row=3, column=8)
+# step()
 def off1():
     res = pyautogui.confirm(text='', title='1 - motor harakatini to`xtasizmi() ?', buttons=['OK', 'Cancel'])
     if res == 'Cancel':
@@ -1035,7 +1071,6 @@ Label(secondWindow, text='surjina sathi /m').grid(row=2, column=2, padx=1, pady=
 Label(secondWindow, text=' kutarilishi /sm',width=12).grid(row=2, column=4, padx=1, pady=8)
 #foizini hisoblash
 
-print(mfoiz2)
 
 #bosilgandagi sathi caption
 Label(secondWindow, text='bosilgandagi sathi /m').grid(row=2, column=5, padx=1, pady=8)
@@ -1166,12 +1201,8 @@ def grad_date():
     worksheet = workbook.add_worksheet()
     # Widen column A for extra visibility.
 
-    # print( massivsensor1[1][2])
-    # print(massivsensor1[1][0])
-    # print( massivsensor1[0][2])
-    # print(massivsensor1[0][0])
     # o=massivsensor1[1][2]-massivsensor1[0][2]
-    # print(o.total_seconds())
+
 
     writeSensorinDatabase = 300
     worksheet.set_column('A:A', 14)
