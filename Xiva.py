@@ -17,7 +17,7 @@ from datetime import datetime
 from datetime import timedelta
 
 global sensr
-sensr = 0
+sensr = 1
 global onoff1, onoff2, onoff3, onoff4, onoff5, onoff6, onoff7, onoff8, work_protsent1,work_protsent2,work_protsent3, \
     mtakror1, wtakror1, \
     mtakror2, wtakror2, \
@@ -334,7 +334,7 @@ def on3():
         except:
             res = pyautogui.alert(text="Siz maydonni bo'sh qoldirdingiz yoki simvol kiritdiz qayta urinib ko'ring", title='Oraliq masofa', )
         if sensr != 0:
-            if (onoff2 != 1):
+            if (onoff2 == 1):
                 try:
                     onoff2 = 1
                     motorKalit1.write_register(4, 0x0200)
@@ -423,8 +423,8 @@ def on2():
             if (onoff1== 2):
                 try:
                     onoff1 = 2
-                    motorKalit1.write_register(1, 0x0200)
-                    motorKalit1.write_register(2, 0x0100)
+                    motorKalit1.write_register(5, 0x0200)
+                    motorKalit1.write_register(6, 0x0100)
                 except:
                     pyautogui.alert(text="signal yo'q qayta urinib ko'ring")
     else:
@@ -575,9 +575,9 @@ def motor_sensor():
 
     if sensr == 1:
         try:
+            labelSensor1a = int(m_sensor_lbl_input_1.cget('text'))
             motorSensor1a = str(motorsensor1.read_register(1, 0, 3))
             m_sensor_lbl_input_1.configure(bg='white', fg="black")
-            labelSensor1a = int(m_sensor_lbl_input_1.cget('text'))
         except:
             motorSensorXatoSql = "INSERT INTO xato_sensor(motor_id,status)VALUES (%s,%s)"
             valmotorSensorxato = (1, 'motorSensor ishlamadi')
@@ -587,9 +587,9 @@ def motor_sensor():
 
         # motorSensor2
         try:
+            labelSensor2a = m_sensor_lbl_input_2.cget('text')
             motorSensor2a = str(motorsensor2.read_register(1, 0, 3))
             m_sensor_lbl_input_2.configure(bg='white', fg="black")
-            labelSensor2a = m_sensor_lbl_input_2.cget('text')
         except:
             motorSensorXatoSql2 = "INSERT INTO xato_sensor(motor_id,status)VALUES (%s,%s)"
             valmotorSensorxato2 = (2, 'motorSensor ishlamadi')
@@ -598,9 +598,9 @@ def motor_sensor():
             m_sensor_lbl_input_2.configure(bg='black', fg="white")
         # sensor
         try:
+            labelSensor3a = str(m_sensor_lbl_input_3.cget('text'))
             motorSensor3a = str(motorsensor3.read_register(1, 0, 3))
             m_sensor_lbl_input_3.configure(bg='white', fg="black")
-            labelSensor3a = str(m_sensor_lbl_input_3.cget('text'))
         except:
             motorSensorXatoSql3 = "INSERT INTO xato_sensor(motor_id,status)VALUES (%s,%s)"
             valmotorSensorxato3 = (3, 'motorSensor ishlamadi')
@@ -639,13 +639,13 @@ def motor_sensor():
     if ( motorSensor1 >= oraliq1 + labOldmotorSensor1):
         if (onoff1 == 1 and sensr == 1):
             onoff1 = 0
-            motorKalit1.write_register(1, 0x0200)
+            motorKalit1.write_register(5, 0x0200)
         if (onoff1 == 11 and sensr == 0):
             onoff1 = 10
     if (motorSensor1 >= pastki_sath1 - max1):
         if (onoff1 == 1  and sensr == 1):
             onoff1 = 0
-            motorKalit1.write_register(1, 0x0200)
+            motorKalit1.write_register(5, 0x0200)
         if (onoff1 == 11  and sensr == 0):
             onoff1 = 10
 
@@ -653,13 +653,13 @@ def motor_sensor():
     if (motorSensor1 <= labOldmotorSensor1 - oraliq1):
         if ( onoff1 == 2 and sensr == 1):
             onoff1 = 0
-            motorKalit1.write_register(2, 0x0200)
+            motorKalit1.write_register(6, 0x0200)
         if ( onoff1 == 12 and sensr == 0):
             onoff1=10
     if (motorSensor1 <=0.18):
         if (onoff1 == 2 and sensr == 1):
             onoff1 = 0
-            motorKalit1.write_register(2, 0x0200)
+            motorKalit1.write_register(6, 0x0200)
         if (onoff1 == 12 and sensr == 0):
             onoff1 = 10
     # 2-motor yuqoriga kutarilish
@@ -690,18 +690,17 @@ def motor_sensor():
         if ( onoff2 == 12 and sensr == 0):
             onoff2 = 10
     print(motorSensor3)
-    print(labOldmotorSensor3)
     # 3-motor yuqoriga kutarilish
     if (motorSensor3 >= oraliq3 + labOldmotorSensor3):
         if (onoff3== 1 and sensr == 1):
             onoff3 = 0
-            motorKalit1.write_register(5, 0x0200)
+            motorKalit1.write_register(1, 0x0200)
         if (onoff3== 11 and sensr == 0):
             onoff3 = 10
     if (motorSensor3 >= pastki_sath3 - max3):
         if (onoff3 == 1 and sensr == 1):
             onoff3 = 0
-            motorKalit1.write_register(5, 0x0200)
+            motorKalit1.write_register(1, 0x0200)
         if (onoff3 == 11 and sensr == 0):
             onoff3 = 10
 
@@ -709,13 +708,13 @@ def motor_sensor():
     if (  motorSensor3 <= labOldmotorSensor3 - oraliq3 ):
         if (onoff3 == 2 and sensr == 1):
             onoff3 = 0
-            motorKalit1.write_register(6, 0x0200)
+            motorKalit1.write_register(2, 0x0200)
         if (onoff3 == 12 and sensr == 0):
             onoff3 = 10
     if ( motorSensor3 <= 0.18 ):
         if( onoff3 == 2 and sensr==1):
           onoff3 = 0
-          motorKalit1.write_register(6, 0x0200)
+          motorKalit1.write_register(2, 0x0200)
         if( onoff3 == 12 and sensr==0):
             onoff3=10
 
@@ -726,6 +725,7 @@ def motor_sensor():
             lbl_work_protsent1 = Label(secondWindow, text=str(work_protsent1), bg="grey", fg="white", width=7,
                                        font=('italic', 16, 'bold'))
             lbl_work_protsent1.grid(row=3, column=8)
+
 
 
 
@@ -808,6 +808,9 @@ def motor_sensor():
     # motorSensor2
     if (float(motorSensor2) == float(lastmotorSensor2)):
         mtakror2 = mtakror2 + 1
+        print(motorSensor1)
+        print(motorSensor2)
+        print(motorSensor3)
         mycursor.execute("UPDATE motor_sensor SET takror=%s where id=%s  ", [mtakror2, id2])
 
     else:
@@ -850,8 +853,8 @@ def off1():
     global onoff1
     if sensr != 0:
         try:
-            motorKalit1.write_register(1, 0x0200)
-            motorKalit1.write_register(2, 0x0200)
+            motorKalit1.write_register(5, 0x0200)
+            motorKalit1.write_register(6, 0x0200)
             onoff1 = 0
         except:
             pyautogui.alert(text="signal yo'q qayta urinib ko'ring")
@@ -884,8 +887,8 @@ def off3():
 
     if sensr != 0:
         try:
-            motorKalit1.write_register(5, 0x0200)
-            motorKalit1.write_register(6, 0x0200)
+            motorKalit1.write_register(1, 0x0200)
+            motorKalit1.write_register(2, 0x0200)
             onoff3 = 0
         except:
             pyautogui.alert(text="signal yo'q qayta urinib ko'ring")
@@ -1082,7 +1085,7 @@ Label(secondWindow, text='bosilgandagi sathi /m').grid(row=2, column=5, padx=1, 
 mlbl_text_1 = Label(secondWindow, text='1', fg='yellow', bg='blue', width=2, font=('italic', 20, 'bold'))
 mlbl_text_1.grid(row=3, column=1, padx=2, pady=6)
 #yerdan qancha balandlikda turishi surjinaning input 1
-m_sensor_lbl_input_1 = Label(secondWindow, text=" ", font=('Arial', 20), bg='white', fg='blue', width=5, bd=2,relief=SUNKEN)
+m_sensor_lbl_input_1 = Label(secondWindow, text="0", font=('Arial', 20), bg='white', fg='blue', width=5, bd=2,relief=SUNKEN)
 m_sensor_lbl_input_1.grid(row=3, column=2)
 #kutarish kerak bo'lgan chegara 1
 m_up_input1 = Label(secondWindow, font=('Arial', 20), text='', bg='white', fg='blue', width=5, bd=2, relief=SUNKEN)
@@ -1094,7 +1097,7 @@ mbtn_down1_text  = Button(secondWindow, width=5, command=on2, text='pastga', fg=
 #motorning nechanchiligini bildirish  text 2
 mlbl_text_2 = Label(secondWindow, text='2', fg='yellow', bg='blue', width=2, font=('italic', 20, 'bold')).grid(row=4,column=1,padx=1,pady=6)
 #yerdan qancha balandlikda turishi surjinaning input 2
-m_sensor_lbl_input_2 = Label(secondWindow, font=('Arial', 20), bg='white', fg='black', width=5, bd=2, relief=SUNKEN)
+m_sensor_lbl_input_2 = Label(secondWindow,text="0", font=('Arial', 20), bg='white', fg='black', width=5, bd=2, relief=SUNKEN)
 m_sensor_lbl_input_2.grid(row=4, column=2)
 
 #kutarish kerak bo'lgan chegara 2
@@ -1108,12 +1111,12 @@ mbtn_down_text2 = Button(secondWindow, width=5, command=on4, text='pastga', fg='
 mlbl_text_3  = Label(secondWindow, text='3', fg='yellow', bg='blue', width=2, font=('italic', 20, 'bold')).grid(row=5,column=1,padx=1,pady=6)
 #yerdan qancha balandlikda turishi surjinaning input 3
 
-m_sensor_lbl_input_3 = Label(secondWindow, font=('Arial', 20), text=' ', bg='white', fg='blue', width=5, bd=2,relief=SUNKEN)
+m_sensor_lbl_input_3 = Label(secondWindow, font=('Arial', 20), text='0', bg='white', fg='blue', width=5, bd=2,relief=SUNKEN)
 m_sensor_lbl_input_3.grid(row=5, column=2)
 #kutarish kerak bo'lgan chegara 3
 m_up_input3= Label(secondWindow, font=('Arial', 20), text='', bg='white', fg='blue', width=5, bd=2,relief=SUNKEN)
 m_up_input3.grid(row=5, column=4)
-#Button ko'tarish to'xtatish, tushirish 2-motorniki
+#Button ko'tarish to'xtatish, tushirish 2-motornik2
 mbtn_up_text3   = Button(secondWindow, width=5, text='tepaga', command=on5, fg='white', bg='green', font=('italic', 14, 'bold')).grid(row=5, column=9, padx=1, pady=6)
 mbtn_stop_text3 = Button(secondWindow, width=5, text='stop', command=off3, fg='white', bg='red',font=('italic', 14, 'bold')).grid(row=5, column=10, padx=1, pady=6)
 mbtn_down_text3 = Button(secondWindow, width=5, text='pastga', command=on6, fg='black', bg='yellow',font=('italic', 14, 'bold')).grid(row=5, column=11, padx=1, pady=6)
@@ -1333,6 +1336,6 @@ date2.grid(row=3, column=2, padx=20, pady=20)
 mydb.commit()
 motor_sensor()
 
-water_sensor()
+#water_sensor()
 ogoh()
 window.mainloop()
