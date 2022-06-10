@@ -286,8 +286,8 @@ def on1():
             if (onoff1 == 1):
                 try:
 
-                    motorKalit1.write_register(2, 0x0200)
-                    motorKalit1.write_register(1, 0x0100)
+                    motorKalit1.write_register(6, 0x0200)
+                    motorKalit1.write_register(5, 0x0100)
                 except:
                     pyautogui.alert(text="signal yo'q qayta urinib ko'ring")
 
@@ -380,11 +380,11 @@ def on5():
                 title='Oraliq masofa', )
 
         if sensr != 0:
-            if (onoff3 != 1):
+            if (onoff3 == 1):
                 try:
                     onoff3 = 1
-                    motorKalit1.write_register(6, 0x0200)
-                    motorKalit1.write_register(5, 0x0100)
+                    motorKalit1.write_register(2, 0x0200)
+                    motorKalit1.write_register(1, 0x0100)
                 except:
                     pyautogui.alert(text="signal yo'q qayta urinib ko'ring")
 
@@ -420,7 +420,7 @@ def on2():
             res = pyautogui.alert(text="Siz maydonni bo'sh qoldirdingiz yoki simvol kiritdiz qayta urinib ko'ring",
                                   title='Oraliq masofa', )
         if sensr != 0:
-            if (onoff1!= 2):
+            if (onoff1== 2):
                 try:
                     onoff1 = 2
                     motorKalit1.write_register(1, 0x0200)
@@ -460,7 +460,7 @@ def on4():
 
         if sensr != 0:
 
-            if (onoff2 != 2):
+            if (onoff2 == 2):
                 try:
 
                     onoff2 = 2
@@ -515,12 +515,12 @@ def on6():
 
         if sensr != 0:
 
-            if (onoff3 != 2):
+            if (onoff3 == 2):
                 try:
 
                     onoff3 = 2
-                    motorKalit1.write_register(5, 0x0200)
-                    motorKalit1.write_register(6, 0x0100)
+                    motorKalit1.write_register(1, 0x0200)
+                    motorKalit1.write_register(2, 0x0100)
 
                 except:
                     pyautogui.alert(text="signal yo'q qayta urinib ko'ring")
@@ -721,7 +721,6 @@ def motor_sensor():
 
     if (sensr == 0):
         if onoff1 == 11:
-
             motorSensor1a = str(float(motorSensor1a) - 50)
             work_protsent1 = round(100 * (-labOldmotorSensor1 + motorSensor1) / oraliq1, 2)
             lbl_work_protsent1 = Label(secondWindow, text=str(work_protsent1), bg="grey", fg="white", width=7,
@@ -731,39 +730,44 @@ def motor_sensor():
 
 
 
+
         if onoff1 == 12:
-            motorSensor1a = str(float(motorSensor1a) + 50)
+
             work_protsent1 = round(100 * (labOldmotorSensor1 - motorSensor1) / oraliq1, 2)
             lbl_work_protsent1 = Label(secondWindow, text=str(work_protsent1), bg="grey", fg="white", width=7,
                                        font=('italic', 16, 'bold'))
             lbl_work_protsent1.grid(row=3, column=8)
-
+            motorSensor1a = str(float(motorSensor1a) + 50)
         # motorSensor2
         if onoff2 == 11:
-            motorSensor2a = str(float(motorSensor2a) - 50)
+
             work_protsent2 = round(100 * (-labOldmotorSensor2 + motorSensor2) / oraliq2, 2)
             lbl_work_protsent2 = Label(secondWindow, text=str(work_protsent2), bg="grey", fg="white", width=7,
                                        font=('italic', 16, 'bold'))
             lbl_work_protsent2.grid(row=4, column=8)
+            motorSensor2a = str(float(motorSensor2a) - 50)
         if onoff2 == 12:
-            motorSensor2a = str(float(motorSensor2a) + 50)
+
             work_protsent2 = round(100 * (labOldmotorSensor2 - motorSensor2) / oraliq2, 2)
             lbl_work_protsent2 = Label(secondWindow, text=str(work_protsent2), bg="grey", fg="white", width=7,
                                        font=('italic', 16, 'bold'))
             lbl_work_protsent2.grid(row=4, column=8)
+            motorSensor2a = str(float(motorSensor2a) + 50)
         # motorSensor3
         if onoff3 == 11:
-            motorSensor3a = str(float(motorSensor3a) - 50)
+
             work_protsent3 = round(100 * (-labOldmotorSensor3 + motorSensor3) / oraliq3, 2)
             lbl_work_protsent3 = Label(secondWindow, text=str(work_protsent3), bg="grey", fg="white", width=7,
                                        font=('italic', 16, 'bold'))
             lbl_work_protsent3.grid(row=5, column=8)
+            motorSensor3a = str(float(motorSensor3a) - 50)
         if onoff3 == 12:
-            motorSensor3a = str(float(motorSensor3a) + 50)
+
             work_protsent3 = round(100 * ( labOldmotorSensor3- motorSensor3) / oraliq3, 2)
             lbl_work_protsent3 = Label(secondWindow, text=str(work_protsent3), bg="grey", fg="white", width=7,
                                        font=('italic', 16, 'bold'))
             lbl_work_protsent3.grid(row=5, column=8)
+            motorSensor3a = str(float(motorSensor3a) + 50)
 
 
 
